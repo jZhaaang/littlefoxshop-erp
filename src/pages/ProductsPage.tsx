@@ -5,16 +5,11 @@ import {
   PageHeader,
   ConfirmDialog,
   Modal,
+  LoadingModal,
 } from '../components';
-import {
-  ProductTableHeader,
-  ProductRow,
-  ProductForm,
-} from '../components/Products';
+import { ProductForm, ProductsTable } from '../components/Products';
 import { useProducts } from '../lib/supabase/hooks/useProducts';
 import type { ProductValues } from '../lib/supabase/models';
-import { Spinner } from '../components/Spinner';
-import { LoadingModal } from '../components/LoadingModal';
 
 export default function ProductsPage() {
   const [search, setSearch] = useState('');
@@ -100,28 +95,12 @@ export default function ProductsPage() {
       />
 
       <Card title={`Products (${filtered.length})`}>
-        <div className="divide-y">
-          <ProductTableHeader />
-
-          {/* Product Rows */}
-          {loading ? (
-            <div className="flex items-center justify-center py-10">
-              <Spinner className="h-8 w-8" />
-              <span className="ml-3 text-sm text-gray-600">
-                Loading products…
-              </span>
-            </div>
-          ) : (
-            filtered.map((product) => (
-              <ProductRow
-                key={product.id}
-                product={product}
-                onEdit={() => onEditClick(product.id)}
-                onDelete={() => onDeleteClick(product.id)}
-              />
-            ))
-          )}
-        </div>
+        <ProductsTable
+          rows={filtered}
+          loading={loading}
+          onEdit={(product) => onEditClick(product.id)}
+          onDelete={(product) => onDeleteClick(product.id)}
+        />
       </Card>
 
       <Modal

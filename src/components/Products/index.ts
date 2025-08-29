@@ -1,3 +1,2 @@
 export * from './ProductForm';
-export * from './ProductTableHeader';
-export * from './ProductTableRow';
+export * from './ProductsTable';

@@ -6,3 +6,5 @@ export * from './Modal';
 export * from './PageHeader';
 export * from './SearchBar';
 export * from './Tabs';
+export * from './GridTable';
+export * from './LoadingModal';
