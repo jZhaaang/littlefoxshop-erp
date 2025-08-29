@@ -13,6 +13,8 @@ import {
 } from '../components/Products';
 import { useProducts } from '../lib/supabase/hooks/useProducts';
 import type { ProductValues } from '../lib/supabase/models';
+import { Spinner } from '../components/Spinner';
+import { LoadingModal } from '../components/LoadingModal';
 
 export default function ProductsPage() {
   const [search, setSearch] = useState('');
@@ -25,6 +27,8 @@ export default function ProductsPage() {
   const { products, loading, createProduct, updateProduct, deleteProduct } =
     useProducts();
 
+  const [loadingText, setLoadingText] = useState<string | null>(null);
+
   const filtered = products.filter((product) =>
     (product.name + product.sku + product.type)
       .toLowerCase()
@@ -36,8 +40,11 @@ export default function ProductsPage() {
   }
 
   async function handleAdd(values: ProductValues) {
+    setLoadingText(`Adding ${values.name}`);
+
     await createProduct(values);
 
+    setLoadingText(null);
     setOpenAdd(false);
   }
 
@@ -49,8 +56,11 @@ export default function ProductsPage() {
   async function handleEdit(values: ProductValues) {
     if (!currentProduct) return;
 
+    setLoadingText(`Editing ${values.sku}`);
+
     await updateProduct(currentProduct, values);
 
+    setLoadingText(null);
     setOpenEdit(false);
     setCurrentProduct(null);
   }
@@ -63,8 +73,13 @@ export default function ProductsPage() {
   async function handleDelete() {
     if (!currentProduct) return;
 
+    setLoadingText(
+      `Deleting ${products.find((product) => product.id === currentProduct)?.sku}`
+    );
+
     await deleteProduct(currentProduct);
 
+    setLoadingText(null);
     setOpenDelete(false);
     setCurrentProduct(null);
   }
@@ -89,14 +104,23 @@ export default function ProductsPage() {
           <ProductTableHeader />
 
           {/* Product Rows */}
-          {filtered.map((product) => (
-            <ProductRow
-              product={product}
-              onEdit={() => onEditClick(product.id)}
-              onDelete={() => onDeleteClick(product.id)}
-              key={product.id}
-            />
-          ))}
+          {loading ? (
+            <div className="flex items-center justify-center py-10">
+              <Spinner className="h-8 w-8" />
+              <span className="ml-3 text-sm text-gray-600">
+                Loading products…
+              </span>
+            </div>
+          ) : (
+            filtered.map((product) => (
+              <ProductRow
+                key={product.id}
+                product={product}
+                onEdit={() => onEditClick(product.id)}
+                onDelete={() => onDeleteClick(product.id)}
+              />
+            ))
+          )}
         </div>
       </Card>
 
@@ -154,6 +178,8 @@ export default function ProductsPage() {
         }.`}
         confirmText="Delete"
       />
+
+      <LoadingModal open={!!loadingText} text={loadingText ?? ''} />
     </div>
   );
 }
