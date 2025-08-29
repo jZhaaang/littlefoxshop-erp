@@ -88,7 +88,12 @@ export async function updateProductById(
 export async function deleteProductById(
   id: string
 ): Promise<{ data: Product | null; error: Error | null }> {
-  const { data, error } = await supabase.from('products').delete().eq('id', id);
+  const { data, error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', id)
+    .select()
+    .single();
 
   if (error) {
     console.error('Error deleting product:', error.message);
