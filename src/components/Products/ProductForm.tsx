@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type {
   Product,
-  ProductInsert,
   ProductType,
   ProductValues,
 } from '../../lib/supabase/models';
@@ -9,7 +8,7 @@ type ProductFormProps = {
   type: 'create' | 'edit';
   initial?: Partial<Product>;
   onCancel: () => void;
-  onSubmit: (values: ProductInsert) => Promise<void> | void;
+  onSubmit: (values: ProductValues) => Promise<void> | void;
 };
 
 const PRODUCT_TYPES = [

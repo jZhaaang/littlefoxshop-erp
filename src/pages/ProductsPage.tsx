@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { products } from '../data/fake';
 import {
   Card,
   SearchBar,
@@ -12,6 +11,8 @@ import {
   ProductRow,
   ProductForm,
 } from '../components/Products';
+import { useProducts } from '../lib/supabase/hooks/useProducts';
+import type { ProductValues } from '../lib/supabase/models';
 
 export default function ProductsPage() {
   const [search, setSearch] = useState('');
@@ -19,7 +20,10 @@ export default function ProductsPage() {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [currentSku, setCurrentSku] = useState<string | null>(null);
+  const [currentProduct, setCurrentProduct] = useState<string | null>(null);
+
+  const { products, loading, createProduct, updateProduct, deleteProduct } =
+    useProducts();
 
   const filtered = products.filter((product) =>
     (product.name + product.sku + product.type)
@@ -31,32 +35,38 @@ export default function ProductsPage() {
     setOpenAdd(true);
   }
 
-  async function handleAdd() {
+  async function handleAdd(values: ProductValues) {
+    await createProduct(values);
+
     setOpenAdd(false);
   }
 
   function onEditClick(sku: string) {
     setOpenEdit(true);
-    setCurrentSku(sku);
+    setCurrentProduct(sku);
   }
 
-  async function handleEdit() {
-    if (!currentSku) return;
+  async function handleEdit(values: ProductValues) {
+    if (!currentProduct) return;
+
+    await updateProduct(currentProduct, values);
 
     setOpenEdit(false);
-    setCurrentSku(null);
+    setCurrentProduct(null);
   }
 
   function onDeleteClick(sku: string) {
     setOpenDelete(true);
-    setCurrentSku(sku);
+    setCurrentProduct(sku);
   }
 
   async function handleDelete() {
-    if (!currentSku) return;
+    if (!currentProduct) return;
+
+    await deleteProduct(currentProduct);
 
     setOpenDelete(false);
-    setCurrentSku(null);
+    setCurrentProduct(null);
   }
 
   return (
@@ -82,8 +92,9 @@ export default function ProductsPage() {
           {filtered.map((product) => (
             <ProductRow
               product={product}
-              onEdit={() => onEditClick(product.sku)}
-              onDelete={() => onDeleteClick(product.sku)}
+              onEdit={() => onEditClick(product.id)}
+              onDelete={() => onDeleteClick(product.id)}
+              key={product.id}
             />
           ))}
         </div>
@@ -101,30 +112,29 @@ export default function ProductsPage() {
           onCancel={() => {
             setOpenAdd(false);
           }}
-          onSubmit={handleAdd}
+          onSubmit={(values) => handleAdd(values)}
         />
       </Modal>
 
       <Modal
-        open={openEdit && !!currentSku}
+        open={openEdit && !!currentProduct}
         onClose={() => {
           setOpenEdit(false);
-          setCurrentSku(null);
+          setCurrentProduct(null);
         }}
         title={`Edit ${
-          products.find((product) => product.sku === currentSku)?.name ??
-          'this product'
+          products.find((product) => product.id === currentProduct)?.sku
         }`}
       >
-        {currentSku && (
+        {currentProduct && (
           <ProductForm
             type="edit"
-            initial={products.find((product) => product.sku === currentSku)}
+            initial={products.find((product) => product.id === currentProduct)}
             onCancel={() => {
               setOpenEdit(false);
-              setCurrentSku(null);
+              setCurrentProduct(null);
             }}
-            onSubmit={handleEdit}
+            onSubmit={(values) => handleEdit(values)}
           />
         )}
       </Modal>
@@ -133,13 +143,14 @@ export default function ProductsPage() {
         open={openDelete}
         onCancel={() => {
           setOpenDelete(false);
-          setCurrentSku(null);
+          setCurrentProduct(null);
         }}
         onConfirm={handleDelete}
-        title="Delete product?"
+        title={`Delete ${
+          products.find((product) => product.id === currentProduct)?.sku
+        }?`}
         description={`This will permanently remove ${
-          products.find((product) => product.sku === currentSku)?.name ??
-          'this product'
+          products.find((product) => product.id === currentProduct)?.name
         }.`}
         confirmText="Delete"
       />
