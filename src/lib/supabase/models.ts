@@ -9,3 +9,6 @@ export type ProductInsert = Database['public']['Tables']['products']['Insert'];
 
 // Update types
 export type ProductUpdate = Database['public']['Tables']['products']['Update'];
+
+// UI/UX types
+export type ProductValues = Omit<Product, 'id' | 'created_at'>;

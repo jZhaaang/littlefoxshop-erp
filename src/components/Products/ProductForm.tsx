@@ -3,6 +3,7 @@ import type {
   Product,
   ProductInsert,
   ProductType,
+  ProductValues,
 } from '../../lib/supabase/models';
 type ProductFormProps = {
   type: 'create' | 'edit';
@@ -10,8 +11,6 @@ type ProductFormProps = {
   onCancel: () => void;
   onSubmit: (values: ProductInsert) => Promise<void> | void;
 };
-
-type ProductValues = Omit<Product, 'id' | 'created_at'>;
 
 const PRODUCT_TYPES = [
   'Socks',
