@@ -39,7 +39,7 @@ export function usePurchases() {
         if (purchaseItemsError) throw purchaseItemsError;
 
         return {
-          purchase,
+          ...purchase,
           purchaseItems: purchaseItemsData,
         } as PurchaseWithItems;
       });
@@ -77,7 +77,7 @@ export function usePurchases() {
 
       const enriched = await Promise.all(promises);
       const newPurchaseWithItems = {
-        purchase: purchaseData,
+        ...purchaseData,
         purchaseItems: enriched,
       };
       setPurchasesWithItems((prev) => [...prev, newPurchaseWithItems]);
@@ -102,7 +102,7 @@ export function usePurchases() {
 
       setPurchasesWithItems((prev) =>
         prev.map((purchaseWithItems) =>
-          purchaseWithItems.purchase.id === purchaseId
+          purchaseWithItems.id === purchaseId
             ? {
                 ...purchaseWithItems,
                 purchaseItems: [...purchaseWithItems.purchaseItems, data],
@@ -125,7 +125,7 @@ export function usePurchases() {
 
       setPurchasesWithItems((prev) =>
         prev.map((purchaseWithItems) =>
-          purchaseWithItems.purchase.id === id
+          purchaseWithItems.id === id
             ? { ...purchaseWithItems, purchase: data }
             : purchaseWithItems
         )
@@ -167,7 +167,7 @@ export function usePurchases() {
       const { error } = await deletePurchaseById(id);
       if (error) throw error;
       setPurchasesWithItems((prev) =>
-        prev.filter((purchaseWithItems) => purchaseWithItems.purchase.id !== id)
+        prev.filter((purchaseWithItems) => purchaseWithItems.id !== id)
       );
     } catch (err) {
       setError(err as Error);
@@ -185,7 +185,7 @@ export function usePurchases() {
       const purchaseId = data.purchase_id;
       setPurchasesWithItems((prev) =>
         prev.map((purchaseWithItems) =>
-          purchaseWithItems.purchase.id === purchaseId
+          purchaseWithItems.id === purchaseId
             ? {
                 ...purchaseWithItems,
                 purchaseItems: purchaseWithItems.purchaseItems.filter(

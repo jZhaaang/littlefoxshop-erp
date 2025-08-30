@@ -27,7 +27,11 @@ export type PurchaseItemUpdate =
 
 // UI/UX types
 export type ProductValues = Omit<Product, 'id' | 'created_at'>;
-export type PurchaseWithItems = {
-  purchase: Purchase;
+
+export type PurchaseWithItems = Purchase & {
   purchaseItems: PurchaseItem[];
+};
+
+export type PurchaseWithItemsValues = Omit<Purchase, 'id' | 'created_at'> & {
+  purchaseItems: Omit<PurchaseItem, 'id' | 'created_at' | 'purchase_id'>[];
 };

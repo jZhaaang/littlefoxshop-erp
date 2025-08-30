@@ -13,24 +13,20 @@ const columns: GridCol<PurchaseWithItems>[] = [
     header: 'Purchase Order #',
     span: 2,
     cell: (row) => (
-      <div className="font-medium text-slate-800">
-        {row.purchase.purchase_order_no}
-      </div>
+      <div className="font-medium text-slate-800">{row.purchase_order_no}</div>
     ),
   },
   {
     header: 'Supplier',
     span: 2,
-    cell: (row) => (
-      <span className="text-slate-600">{row.purchase.supplier}</span>
-    ),
+    cell: (row) => <span className="text-slate-600">{row.supplier}</span>,
   },
   {
     header: 'Status',
     span: 1,
     align: 'text-center',
     cell: (row) => {
-      const completed = !!row.purchase.date_received;
+      const completed = !!row.date_received;
       return (
         <Badge
           tone={completed ? 'green' : 'blue'}
@@ -45,7 +41,7 @@ const columns: GridCol<PurchaseWithItems>[] = [
     header: 'Order Date',
     span: 2,
     cell: (row) => (
-      <span className="text-slate-700">{fmtDate(row.purchase.order_date)}</span>
+      <span className="text-slate-700">{fmtDate(row.order_date)}</span>
     ),
   },
   {
@@ -53,7 +49,7 @@ const columns: GridCol<PurchaseWithItems>[] = [
     span: 2,
     cell: (row) => (
       <span className="text-slate-700">
-        {fmtDate(row.purchase.date_received) || '-'}
+        {fmtDate(row.date_received) || '-'}
       </span>
     ),
   },
@@ -72,7 +68,7 @@ export function PurchasesTable({ rows, loading, onEdit, onDelete }: Props) {
       columns={columns}
       rows={rows}
       loading={!!loading}
-      keyFor={(row) => row.purchase.id}
+      keyFor={(row) => row.id}
       leadingSpan={1}
       actions={(row) => (
         <div className="flex justify-center items-center gap-2">
