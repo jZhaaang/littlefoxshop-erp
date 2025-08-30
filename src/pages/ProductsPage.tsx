@@ -43,9 +43,9 @@ export default function ProductsPage() {
     setOpenAdd(false);
   }
 
-  function onEditClick(sku: string) {
+  function onEditClick(id: string) {
     setOpenEdit(true);
-    setCurrentProduct(sku);
+    setCurrentProduct(id);
   }
 
   async function handleEdit(values: ProductValues) {
@@ -60,9 +60,9 @@ export default function ProductsPage() {
     setCurrentProduct(null);
   }
 
-  function onDeleteClick(sku: string) {
+  function onDeleteClick(id: string) {
     setOpenDelete(true);
-    setCurrentProduct(sku);
+    setCurrentProduct(id);
   }
 
   async function handleDelete() {
