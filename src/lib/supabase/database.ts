@@ -40,8 +40,8 @@ export type Database = {
           name?: string;
           price_usd: number;
           sku?: string;
-          stock?: number | null;
-          type?: Database['public']['Enums']['product_type'] | null;
+          stock?: number;
+          type: Database['public']['Enums']['product_type'];
         };
         Update: {
           cost_rmb?: number;
@@ -54,8 +54,77 @@ export type Database = {
           name?: string;
           price_usd?: number;
           sku?: string;
-          stock?: number | null;
-          type?: Database['public']['Enums']['product_type'] | null;
+          stock?: number;
+          type?: Database['public']['Enums']['product_type'];
+        };
+        Relationships: [];
+      };
+      purchase_items: {
+        Row: {
+          id: string;
+          product_sku: string;
+          purchase_id: string;
+          quantity: number;
+        };
+        Insert: {
+          id?: string;
+          product_sku: string;
+          purchase_id: string;
+          quantity: number;
+        };
+        Update: {
+          id?: string;
+          product_sku?: string;
+          purchase_id?: string;
+          quantity?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'purchase_items_product_sku_fkey';
+            columns: ['product_sku'];
+            isOneToOne: false;
+            referencedRelation: 'products';
+            referencedColumns: ['sku'];
+          },
+          {
+            foreignKeyName: 'purchase_items_purchase_id_fkey';
+            columns: ['purchase_id'];
+            isOneToOne: false;
+            referencedRelation: 'purchases';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      purchases: {
+        Row: {
+          created_at: string | null;
+          date_received: string | null;
+          id: string;
+          order_date: string;
+          purchase_order_no: string;
+          shipping_fee_domestic: number | null;
+          shipping_fee_international: number | null;
+          supplier: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          date_received?: string | null;
+          id?: string;
+          order_date: string;
+          purchase_order_no: string;
+          shipping_fee_domestic?: number | null;
+          shipping_fee_international?: number | null;
+          supplier: string;
+        };
+        Update: {
+          created_at?: string | null;
+          date_received?: string | null;
+          id?: string;
+          order_date?: string;
+          purchase_order_no?: string;
+          shipping_fee_domestic?: number | null;
+          shipping_fee_international?: number | null;
+          supplier?: string;
         };
         Relationships: [];
       };
@@ -203,7 +272,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      product_type: ['Socks', 'Cupholder', 'AirPods Case', 'Packaging'],
+      product_type: [
+        'Socks',
+        'Cupholder',
+        'AirPods Case',
+        'Packaging',
+        'Uncategorized',
+      ],
     },
   },
 } as const;
