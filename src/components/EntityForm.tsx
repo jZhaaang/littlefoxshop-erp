@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { fromLocalInputToISO, toLocalInputValue } from '../lib/utils/datetime';
 
 export type Mode = 'create' | 'edit';
 
-export type FieldType = 'text' | 'number' | 'select' | 'textarea';
+export type FieldType = 'text' | 'number' | 'select' | 'textarea' | 'datetime';
 
 export type FieldConfig<T> = {
   name: keyof T;
@@ -20,6 +21,7 @@ export type EntityFormProps<T> = {
   mode: Mode;
   initial: T;
   fields: FieldConfig<T>[];
+  children?: React.ReactNode;
   onCancel: () => void;
   onSubmit: (values: T) => Promise<void> | void;
   submitText?: string;
@@ -29,6 +31,7 @@ export function EntityForm<T extends Record<string, any>>({
   mode,
   initial,
   fields,
+  children,
   onCancel,
   onSubmit,
   submitText,
@@ -143,6 +146,21 @@ export function EntityForm<T extends Record<string, any>>({
                 </select>
               )}
 
+              {field.type === 'datetime' && (
+                <input
+                  type="datetime-local"
+                  {...common}
+                  value={toLocalInputValue(val as string | null | undefined)}
+                  onChange={(e) =>
+                    setField(
+                      field.name,
+                      fromLocalInputToISO(e.target.value) as any
+                    )
+                  }
+                  step={60}
+                />
+              )}
+
               {errors[key] && (
                 <p className="mt-1 text-xs text-red-600">{errors[key]}</p>
               )}
@@ -150,6 +168,9 @@ export function EntityForm<T extends Record<string, any>>({
           );
         })}
       </div>
+
+      {/* Children elements */}
+      {children}
 
       <div className="flex justify-end gap-2 pt-2">
         <button

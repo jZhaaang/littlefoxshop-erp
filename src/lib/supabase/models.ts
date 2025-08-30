@@ -12,18 +12,20 @@ export type PurchaseItem =
 // Insert types
 export type ProductInsert = Database['public']['Tables']['products']['Insert'];
 
-export type PurchaseInsert = Database['public']['Tables']['purchases']['Row'];
+export type PurchaseInsert =
+  Database['public']['Tables']['purchases']['Insert'];
 
 export type PurchaseItemInsert =
-  Database['public']['Tables']['purchase_items']['Row'];
+  Database['public']['Tables']['purchase_items']['Insert'];
 
 // Update types
 export type ProductUpdate = Database['public']['Tables']['products']['Update'];
 
-export type PurchaseUpdate = Database['public']['Tables']['purchases']['Row'];
+export type PurchaseUpdate =
+  Database['public']['Tables']['purchases']['Update'];
 
 export type PurchaseItemUpdate =
-  Database['public']['Tables']['purchase_items']['Row'];
+  Database['public']['Tables']['purchase_items']['Update'];
 
 // UI/UX types
 export type ProductValues = Omit<Product, 'id' | 'created_at'>;
@@ -32,6 +34,6 @@ export type PurchaseWithItems = Purchase & {
   purchaseItems: PurchaseItem[];
 };
 
-export type PurchaseWithItemsValues = Omit<Purchase, 'id' | 'created_at'> & {
-  purchaseItems: Omit<PurchaseItem, 'id' | 'created_at' | 'purchase_id'>[];
+export type PurchaseWithItemsInsert = PurchaseInsert & {
+  purchaseItems: PurchaseItemInsert[];
 };
