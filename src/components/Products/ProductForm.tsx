@@ -52,6 +52,12 @@ const fields: FieldConfig<ProductValues>[] = [
     options: PRODUCT_TYPES as unknown as string[],
   },
   {
+    name: 'min_stock',
+    label: 'Minimum Stock',
+    type: 'number',
+    parse: (s) => Number(s),
+  },
+  {
     name: 'cost_rmb',
     label: 'Cost (RMB)',
     type: 'number',
@@ -67,17 +73,16 @@ const fields: FieldConfig<ProductValues>[] = [
   },
   { name: 'image_url', label: 'Image URL', type: 'text', colSpan: 2 },
   {
-    name: 'stock',
-    label: 'Stock',
-    type: 'number',
-    parse: (s) => Number(s),
-    disabled: (mode) => mode === 'edit',
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    colSpan: 2,
   },
   {
-    name: 'min_stock',
-    label: 'Minimum Stock',
-    type: 'number',
-    parse: (s) => Number(s),
+    name: 'details',
+    label: 'Details',
+    type: 'textarea',
+    colSpan: 2,
   },
 ];
 
