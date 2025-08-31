@@ -62,7 +62,10 @@ export function EntityForm<T extends Record<string, any>>({
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form
+      className="space-y-4 max-h-[80vh] overflow-y-auto px-4"
+      onSubmit={handleSubmit}
+    >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {fields.map((field) => {
           const key = String(field.name);
@@ -172,7 +175,7 @@ export function EntityForm<T extends Record<string, any>>({
       {/* Children elements */}
       {children}
 
-      <div className="flex justify-end gap-2 pt-2">
+      <div className="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-500 flex justify-end gap-2 p-4">
         <button
           type="button"
           onClick={onCancel}
