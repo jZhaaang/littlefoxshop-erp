@@ -14,7 +14,10 @@ export type FieldConfig<T> = {
   disabled?: (mode: Mode) => boolean;
   validate?: (val: T[keyof T], values: T, mode: Mode) => string | null;
   parse?: (raw: string) => any;
-  colSpan?: 1 | 2;
+
+  colSpan?: 1 | 2 | 3 | 4;
+  colStart?: 1 | 2 | 3 | 4;
+  breakBefore?: boolean;
 };
 
 export type EntityFormProps<T> = {
@@ -66,11 +69,38 @@ export function EntityForm<T extends Record<string, any>>({
       className="space-y-4 max-h-[80vh] overflow-y-auto px-4"
       onSubmit={handleSubmit}
     >
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
         {fields.map((field) => {
           const key = String(field.name);
           const val = values[field.name];
           const disabled = field.disabled?.(mode) ?? false;
+
+          const span = field.colSpan ?? 1;
+          const start = field.colStart;
+
+          const spanClass =
+            span === 4
+              ? 'sm:col-span-4'
+              : span === 3
+                ? 'sm:col-span-3'
+                : span === 2
+                  ? 'sm:col-span-2'
+                  : 'sm:col-span-1';
+
+          const startClass =
+            start === 4
+              ? 'sm:col-start-4'
+              : start === 3
+                ? 'sm:col-start-3'
+                : start === 2
+                  ? 'sm:col-start-2'
+                  : start === 1
+                    ? 'sm:col-start-1'
+                    : '';
+
+          const wrapperClasses = [spanClass, startClass]
+            .filter(Boolean)
+            .join(' ');
 
           const common = {
             className:
@@ -81,92 +111,96 @@ export function EntityForm<T extends Record<string, any>>({
           } as const;
 
           return (
-            <div
-              key={key}
-              className={field.colSpan === 2 ? 'sm:col-span-2' : ''}
-            >
-              <label className="block text-sm font-medium">{field.label}</label>
-
-              {field.type === 'text' && (
-                <input
-                  {...common}
-                  value={String(val ?? '')}
-                  onChange={(e) =>
-                    setField(
-                      field.name,
-                      (field.parse?.(e.target.value) ?? e.target.value) as any
-                    )
-                  }
-                />
+            <div key={key} className="contents">
+              {field.breakBefore && (
+                <div className="hidden sm:block sm:col-span-4" />
               )}
+              <div className={wrapperClasses}>
+                <label className="block text-sm font-medium">
+                  {field.label}
+                </label>
 
-              {field.type === 'number' && (
-                <input
-                  type="number"
-                  step="0.01"
-                  {...common}
-                  value={Number(val ?? 0)}
-                  onChange={(e) =>
-                    setField(
-                      field.name,
-                      (field.parse?.(e.target.value) ??
-                        Number(e.target.value)) as any
-                    )
-                  }
-                />
-              )}
+                {field.type === 'text' && (
+                  <input
+                    {...common}
+                    value={String(val ?? '')}
+                    onChange={(e) =>
+                      setField(
+                        field.name,
+                        (field.parse?.(e.target.value) ?? e.target.value) as any
+                      )
+                    }
+                  />
+                )}
 
-              {field.type === 'textarea' && (
-                <textarea
-                  {...common}
-                  value={String(val ?? '')}
-                  onChange={(e) =>
-                    setField(
-                      field.name,
-                      (field.parse?.(e.target.value) ?? e.target.value) as any
-                    )
-                  }
-                  rows={4}
-                />
-              )}
+                {field.type === 'number' && (
+                  <input
+                    type="number"
+                    step="0.01"
+                    {...common}
+                    value={Number(val ?? 0)}
+                    onChange={(e) =>
+                      setField(
+                        field.name,
+                        (field.parse?.(e.target.value) ??
+                          Number(e.target.value)) as any
+                      )
+                    }
+                  />
+                )}
 
-              {field.type === 'select' && (
-                <select
-                  {...common}
-                  value={String(val ?? '')}
-                  onChange={(e) =>
-                    setField(
-                      field.name,
-                      (field.parse?.(e.target.value) ?? e.target.value) as any
-                    )
-                  }
-                >
-                  {(field.options ?? []).map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              )}
+                {field.type === 'textarea' && (
+                  <textarea
+                    {...common}
+                    value={String(val ?? '')}
+                    onChange={(e) =>
+                      setField(
+                        field.name,
+                        (field.parse?.(e.target.value) ?? e.target.value) as any
+                      )
+                    }
+                    rows={4}
+                  />
+                )}
 
-              {field.type === 'datetime' && (
-                <input
-                  type="datetime-local"
-                  {...common}
-                  value={toLocalInputValue(val as string | null | undefined)}
-                  onChange={(e) =>
-                    setField(
-                      field.name,
-                      fromLocalInputToISO(e.target.value) as any
-                    )
-                  }
-                  step={60}
-                />
-              )}
+                {field.type === 'select' && (
+                  <select
+                    {...common}
+                    value={String(val ?? '')}
+                    onChange={(e) =>
+                      setField(
+                        field.name,
+                        (field.parse?.(e.target.value) ?? e.target.value) as any
+                      )
+                    }
+                  >
+                    {(field.options ?? []).map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                )}
 
-              {errors[key] && (
-                <p className="mt-1 text-xs text-red-600">{errors[key]}</p>
-              )}
+                {field.type === 'datetime' && (
+                  <input
+                    type="datetime-local"
+                    {...common}
+                    value={toLocalInputValue(val as string | null | undefined)}
+                    onChange={(e) =>
+                      setField(
+                        field.name,
+                        fromLocalInputToISO(e.target.value) as any
+                      )
+                    }
+                    step={60}
+                  />
+                )}
+
+                {errors[key] && (
+                  <p className="mt-1 text-xs text-red-600">{errors[key]}</p>
+                )}
+              </div>
             </div>
           );
         })}
