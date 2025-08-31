@@ -6,6 +6,7 @@ import type { PurchaseWithItemsInsert } from '../lib/supabase/models';
 import { diffPurchaseItems } from '../lib/utils/diffPurchaseItems';
 import { CrudSection } from '../components/common/';
 import { useCrudDialogs } from '../lib/hooks/useCrudDialogs';
+import { useSupplies } from '../lib/supabase/hooks/useSupplies';
 
 export default function ExpensesPage() {
   const [search, setSearch] = useState('');
@@ -21,6 +22,7 @@ export default function ExpensesPage() {
     deletePurchaseItem,
   } = usePurchases();
   const { products } = useProducts();
+  const { supplies } = useSupplies();
   const purchaseDialogs = useCrudDialogs();
 
   async function handleCreate(values: PurchaseWithItemsInsert) {
@@ -80,7 +82,9 @@ export default function ExpensesPage() {
         setSearch={setSearch}
         searchPlaceholder="Search expenses by order number"
         Table={PurchasesTable}
-        Form={(props) => <PurchaseForm {...props} products={products} />}
+        Form={(props) => (
+          <PurchaseForm {...props} inventory={[...products, ...supplies]} />
+        )}
         getTitleForRow={(p) => p.purchase_order_no}
         getNameForRow={(p) => p.purchase_order_no}
         dialogs={purchaseDialogs}

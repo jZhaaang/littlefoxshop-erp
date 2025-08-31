@@ -4,6 +4,7 @@ import type {
   Product,
   PurchaseItemInsert,
   PurchaseWithItemsInsert,
+  Supply,
 } from '../../lib/supabase/models';
 import { PurchaseItemsForm } from './PurchaseItemsForm';
 
@@ -19,7 +20,7 @@ const EMPTY: PurchaseWithItemsInsert = {
 type Props = {
   type: Mode;
   initial?: PurchaseWithItemsInsert;
-  products: Product[];
+  inventory: (Product | Supply)[];
   onCancel: () => void;
   onSubmit: (values: PurchaseWithItemsInsert) => Promise<void> | void;
 };
@@ -64,7 +65,7 @@ const fields: FieldConfig<PurchaseWithItemsInsert>[] = [
 export function PurchaseForm({
   type,
   initial,
-  products,
+  inventory,
   onCancel,
   onSubmit,
 }: Props) {
@@ -96,7 +97,7 @@ export function PurchaseForm({
     >
       <PurchaseItemsForm
         purchaseItems={purchaseItems}
-        products={products}
+        inventory={inventory}
         onChange={setPurchaseItems}
       />
     </EntityForm>

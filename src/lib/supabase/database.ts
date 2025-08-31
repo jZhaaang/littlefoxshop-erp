@@ -19,7 +19,7 @@ export type Database = {
           cost_rmb: number
           created_at: string
           description: string | null
-          details: Json | null
+          details: string | null
           id: string
           image_url: string | null
           min_stock: number
@@ -34,7 +34,7 @@ export type Database = {
           cost_rmb: number
           created_at?: string
           description?: string | null
-          details?: Json | null
+          details?: string | null
           id?: string
           image_url?: string | null
           min_stock?: number
@@ -49,7 +49,7 @@ export type Database = {
           cost_rmb?: number
           created_at?: string
           description?: string | null
-          details?: Json | null
+          details?: string | null
           id?: string
           image_url?: string | null
           min_stock?: number
@@ -66,28 +66,28 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
-          product_sku: string
           purchase_id: string
           quantity: number
+          sku: string
         }
         Insert: {
           created_at?: string | null
           id?: string
-          product_sku: string
           purchase_id: string
           quantity: number
+          sku: string
         }
         Update: {
           created_at?: string | null
           id?: string
-          product_sku?: string
           purchase_id?: string
           quantity?: number
+          sku?: string
         }
         Relationships: [
           {
             foreignKeyName: "purchase_items_product_sku_fkey"
-            columns: ["product_sku"]
+            columns: ["sku"]
             isOneToOne: false
             referencedRelation: "products"
             referencedColumns: ["sku"]
@@ -131,6 +131,42 @@ export type Database = {
           shipping_fee_domestic?: number | null
           shipping_fee_international?: number | null
           total_cost?: number
+        }
+        Relationships: []
+      }
+      supplies: {
+        Row: {
+          cost_rmb: number
+          created_at: string
+          details: string | null
+          id: string
+          min_stock: number
+          name: string
+          sku: string
+          stock: number
+          supplier: string
+        }
+        Insert: {
+          cost_rmb: number
+          created_at?: string
+          details?: string | null
+          id?: string
+          min_stock?: number
+          name?: string
+          sku?: string
+          stock?: number
+          supplier?: string
+        }
+        Update: {
+          cost_rmb?: number
+          created_at?: string
+          details?: string | null
+          id?: string
+          min_stock?: number
+          name?: string
+          sku?: string
+          stock?: number
+          supplier?: string
         }
         Relationships: []
       }

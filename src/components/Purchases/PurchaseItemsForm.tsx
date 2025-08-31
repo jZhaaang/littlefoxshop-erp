@@ -3,29 +3,27 @@ import type {
   Product,
   PurchaseItemInsert,
   PurchaseItemUpdate,
+  Supply,
 } from '../../lib/supabase/models';
 
 type Props = {
   purchaseItems: PurchaseItemInsert[];
-  products: Product[];
+  inventory: (Product | Supply)[];
   onChange: (change: PurchaseItemInsert[]) => void;
 };
 
 export function PurchaseItemsForm({
   purchaseItems,
-  products,
+  inventory,
   onChange,
 }: Props) {
-  const productOptions = products.map((product) => ({
-    value: product.sku,
-    label: `${product.name} (${product.sku})`,
+  const productOptions = inventory.map((item) => ({
+    value: item.sku,
+    label: `${item.name} (${item.sku})`,
   }));
 
   const addRow = useCallback(() => {
-    onChange([
-      ...purchaseItems,
-      { purchase_id: '', product_sku: '', quantity: 1 },
-    ]);
+    onChange([...purchaseItems, { purchase_id: '', sku: '', quantity: 1 }]);
   }, [purchaseItems, onChange]);
 
   const updateRow = useCallback(
@@ -80,10 +78,8 @@ export function PurchaseItemsForm({
                 <td className="py-2 pr-4">
                   <select
                     className="w-full border rounded px-2 py-1"
-                    value={row.product_sku}
-                    onChange={(e) =>
-                      updateRow(i, { product_sku: e.target.value })
-                    }
+                    value={row.sku}
+                    onChange={(e) => updateRow(i, { sku: e.target.value })}
                   >
                     <option value="">Select product…</option>
                     {productOptions.map((opt) => (

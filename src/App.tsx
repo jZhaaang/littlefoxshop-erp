@@ -2,8 +2,8 @@ import './global.css';
 import { useState } from 'react';
 import { Layout } from './components/common';
 import OverviewPage from './pages/OverviewPage';
-import ProductsPage from './pages/ProductsPage';
 import ExpensesPage from './pages/ExpensesPage';
+import InventoryPage from './pages/InventoryPage';
 
 export default function App() {
   const [page, setPage] = useState('overview');
@@ -11,7 +11,7 @@ export default function App() {
   return (
     <Layout page={page} setPage={setPage}>
       {page === 'overview' && <OverviewPage />}
-      {page === 'products' && <ProductsPage />}
+      {page === 'inventory' && <InventoryPage />}
       {page === 'orders' && (
         <div className="text-slate-500">Orders (coming soon)</div>
       )}

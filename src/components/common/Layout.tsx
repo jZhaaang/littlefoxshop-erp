@@ -14,8 +14,8 @@ const TABS = [
     icon: <span className="text-slate-500">📊</span>,
   },
   {
-    key: 'products',
-    label: 'Products',
+    key: 'inventory',
+    label: 'Inventory',
     icon: <span className="text-slate-500">📦</span>,
   },
   {
