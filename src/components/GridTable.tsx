@@ -20,6 +20,21 @@ type Props<T> = {
   emptyNode?: ReactNode;
 };
 
+const spanClass: Record<number, string> = {
+  1: 'col-span-1',
+  2: 'col-span-2',
+  3: 'col-span-3',
+  4: 'col-span-4',
+  5: 'col-span-5',
+  6: 'col-span-6',
+  7: 'col-span-7',
+  8: 'col-span-8',
+  9: 'col-span-9',
+  10: 'col-span-10',
+  11: 'col-span-11',
+  12: 'col-span-12',
+};
+
 export function GridTable<T>({
   columns,
   rows,
@@ -37,16 +52,16 @@ export function GridTable<T>({
     <div className="divide-y">
       {/* Header */}
       <div className="py-2 px-2 grid grid-cols-12 items-center gap-2 font-semibold text-sm text-slate-600 border-b bg-slate-100 rounded-lg">
-        {leadingSpan > 0 && <div className={`col-span-${leadingSpan}`} />}
+        {leadingSpan > 0 && <div className={`${spanClass[leadingSpan]}`} />}
         {columns.map((c, i) => (
           <div
             key={i}
-            className={`col-span-${c.span} ${c.align ?? 'text-left'}`}
+            className={`${spanClass[c.span]} ${c.align ?? 'text-left'}`}
           >
             {c.header}
           </div>
         ))}
-        {actionsSpan > 0 && <div className={`col-span-${actionsSpan}`} />}
+        {actionsSpan > 0 && <div className={`${spanClass[actionsSpan]}`} />}
       </div>
 
       {/* Body */}
