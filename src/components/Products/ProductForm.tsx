@@ -36,6 +36,7 @@ const fields: FieldConfig<ProductValues>[] = [
     label: 'Name',
     type: 'text',
     placeholder: 'e.g. Ceramic Mug',
+    colSpan: 2,
     validate: (v) => (!v ? 'Name is required' : null),
   },
   {
@@ -43,6 +44,7 @@ const fields: FieldConfig<ProductValues>[] = [
     label: 'SKU',
     type: 'text',
     placeholder: 'e.g. MUG-001',
+    colSpan: 2,
     disabled: (mode) => mode === 'edit',
     validate: (v) => (!v ? 'SKU is required' : null),
   },
@@ -86,6 +88,7 @@ const fields: FieldConfig<ProductValues>[] = [
     label: 'Description',
     type: 'textarea',
     colSpan: 2,
+    breakBefore: true,
   },
   {
     name: 'details',

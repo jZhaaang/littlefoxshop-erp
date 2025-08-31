@@ -30,17 +30,20 @@ const fields: FieldConfig<PurchaseWithItemsInsert>[] = [
     label: 'Purchase Order Number',
     type: 'text',
     placeholder: '#123456789',
+    colSpan: 4,
     validate: (v) => (!v ? 'Purchase Order Number is required' : null),
   },
   {
     name: 'order_date',
     label: 'Order Date',
     type: 'datetime',
+    colSpan: 2,
   },
   {
     name: 'date_received',
     label: 'Date Received',
     type: 'datetime',
+    colSpan: 2,
   },
   {
     name: 'shipping_fee_domestic',
