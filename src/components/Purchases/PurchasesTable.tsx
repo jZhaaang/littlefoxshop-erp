@@ -17,11 +17,6 @@ const columns: GridCol<PurchaseWithItems>[] = [
     ),
   },
   {
-    header: 'Supplier',
-    span: 2,
-    cell: (row) => <span className="text-slate-600">{row.supplier}</span>,
-  },
-  {
     header: 'Status',
     span: 1,
     align: 'text-center',
