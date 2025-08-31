@@ -9,3 +9,4 @@ export * from './Tabs';
 export * from './GridTable';
 export * from './LoadingModal';
 export * from './EntityForm';
+export * from './CrudSection';
