@@ -9,7 +9,6 @@ import { PurchaseItemsForm } from './PurchaseItemsForm';
 
 const EMPTY: PurchaseWithItemsInsert = {
   purchase_order_no: '',
-  supplier: '',
   order_date: new Date().toISOString(),
   shipping_fee_domestic: 0,
   shipping_fee_international: 0,
@@ -32,13 +31,6 @@ const fields: FieldConfig<PurchaseWithItemsInsert>[] = [
     type: 'text',
     placeholder: '#123456789',
     validate: (v) => (!v ? 'Purchase Order Number is required' : null),
-  },
-  {
-    name: 'supplier',
-    label: 'Supplier',
-    type: 'text',
-    placeholder: 'e.g. Taobao',
-    validate: (v) => (!v ? 'Supplier is required' : null),
   },
   {
     name: 'order_date',

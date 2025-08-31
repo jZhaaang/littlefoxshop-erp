@@ -38,7 +38,7 @@ export default function ExpensesPage() {
   const { products } = useProducts();
 
   const filtered = purchasesWithItems.filter((purchaseWithItems) =>
-    (purchaseWithItems.purchase_order_no + purchaseWithItems.supplier)
+    purchaseWithItems.purchase_order_no
       .toLowerCase()
       .includes(search.toLowerCase())
   );
@@ -52,7 +52,6 @@ export default function ExpensesPage() {
 
     const purchase = {
       purchase_order_no: values.purchase_order_no,
-      supplier: values.supplier,
       order_date: values.order_date,
       shipping_fee_domestic: values.shipping_fee_domestic,
       shipping_fee_international: values.shipping_fee_international,
@@ -78,7 +77,6 @@ export default function ExpensesPage() {
     const purchase = {
       id: values.id,
       purchase_order_no: values.purchase_order_no,
-      supplier: values.supplier,
       order_date: values.order_date,
       shipping_fee_domestic: values.shipping_fee_domestic,
       shipping_fee_international: values.shipping_fee_international,

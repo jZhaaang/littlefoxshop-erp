@@ -12,6 +12,7 @@ const PRODUCT_TYPES = [
 const EMPTY: ProductValues = {
   sku: '',
   name: '',
+  supplier: '',
   type: 'Uncategorized',
   price_usd: 0,
   cost_rmb: 0,
@@ -44,6 +45,14 @@ const fields: FieldConfig<ProductValues>[] = [
     placeholder: 'e.g. MUG-001',
     disabled: (mode) => mode === 'edit',
     validate: (v) => (!v ? 'SKU is required' : null),
+  },
+  {
+    name: 'supplier',
+    label: 'Supplier',
+    type: 'text',
+    placeholder: 'e.g. Taobao',
+    colSpan: 2,
+    validate: (v) => (!v ? 'Supplier is required' : null),
   },
   {
     name: 'type',

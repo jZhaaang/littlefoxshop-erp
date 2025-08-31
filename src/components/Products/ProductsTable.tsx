@@ -11,14 +11,14 @@ type Props = {
 const columns: GridCol<Product>[] = [
   {
     header: 'Product',
-    span: 4,
+    span: 2,
     cell: (product) => (
       <div className="font-medium text-slate-800">{product.name}</div>
     ),
   },
   {
     header: 'SKU',
-    span: 2,
+    span: 1,
     cell: (product) => <span className="text-slate-600">{product.sku}</span>,
   },
   {
@@ -29,6 +29,13 @@ const columns: GridCol<Product>[] = [
       <Badge tone="gray" className="whitespace-nowrap">
         {product.type}
       </Badge>
+    ),
+  },
+  {
+    header: 'Supplier',
+    span: 2,
+    cell: (product) => (
+      <span className="text-slate-600">{product.supplier}</span>
     ),
   },
   {
