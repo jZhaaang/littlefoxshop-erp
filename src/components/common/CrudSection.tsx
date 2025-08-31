@@ -29,7 +29,7 @@ type CrudSectionProps<T extends { id: string }> = {
   }>;
   Form: React.ComponentType<{
     type: 'create' | 'edit';
-    initial?: Partial<T>;
+    initial?: T;
     onCancel: () => void;
     onSubmit: (values: any) => Promise<void> | void;
   }>;
