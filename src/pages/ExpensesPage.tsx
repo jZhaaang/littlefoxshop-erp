@@ -1,28 +1,14 @@
 import { useState } from 'react';
-import {
-  Card,
-  SearchBar,
-  PageHeader,
-  ConfirmDialog,
-  Modal,
-  LoadingModal,
-} from '../components/common';
-import { PurchasesTable } from '../components/Purchases';
+import { PurchasesTable, PurchaseForm } from '../components/Purchases';
 import { usePurchases } from '../lib/supabase/hooks/usePurchases';
 import { useProducts } from '../lib/supabase/hooks/useProducts';
 import type { PurchaseWithItemsInsert } from '../lib/supabase/models';
-import { PurchaseForm } from '../components/Purchases/PurchaseForm';
 import { diffPurchaseItems } from '../lib/utils/diffPurchaseItems';
+import { CrudSection } from '../components/common/';
+import { useCrudDialogs } from '../lib/hooks/useCrudDialogs';
 
 export default function ExpensesPage() {
   const [search, setSearch] = useState('');
-
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [currentPurchase, setCurrentPurchase] = useState<string | null>(null);
-
-  const [loadingText, setLoadingText] = useState<string | null>(null);
 
   const {
     purchasesWithItems,
@@ -34,22 +20,10 @@ export default function ExpensesPage() {
     deletePurchase,
     deletePurchaseItem,
   } = usePurchases();
-
   const { products } = useProducts();
+  const purchaseDialogs = useCrudDialogs();
 
-  const filtered = purchasesWithItems.filter((purchaseWithItems) =>
-    purchaseWithItems.purchase_order_no
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
-
-  function onAddClick() {
-    setOpenAdd(true);
-  }
-
-  async function handleAdd(values: PurchaseWithItemsInsert) {
-    setLoadingText(`Adding ${values.purchase_order_no}`);
-
+  async function handleCreate(values: PurchaseWithItemsInsert) {
     const purchase = {
       purchase_order_no: values.purchase_order_no,
       order_date: values.order_date,
@@ -59,21 +33,8 @@ export default function ExpensesPage() {
     };
 
     await createPurchase(purchase, values.purchaseItems);
-
-    setLoadingText(null);
-    setOpenAdd(false);
   }
-
-  function onEditClick(id: string) {
-    setOpenEdit(true);
-    setCurrentPurchase(id);
-  }
-
-  async function handleEdit(values: PurchaseWithItemsInsert) {
-    if (!currentPurchase) return;
-
-    setLoadingText(`Editing Purchase Order #${values.purchase_order_no}`);
-
+  async function handleUpdate(id: string, values: PurchaseWithItemsInsert) {
     const purchase = {
       id: values.id,
       purchase_order_no: values.purchase_order_no,
@@ -86,7 +47,7 @@ export default function ExpensesPage() {
     await updatePurchase(purchase.id!, purchase);
 
     const original = purchasesWithItems.find(
-      (purchaseWithItems) => purchaseWithItems.id === currentPurchase
+      (purchaseWithItems) => purchaseWithItems.id === id
     )!.purchaseItems;
     const edited = values.purchaseItems;
 
@@ -102,119 +63,31 @@ export default function ExpensesPage() {
       )
     );
     await Promise.all(
-      itemsToCreate.map((pi) => createPurchaseItem(currentPurchase, pi))
+      itemsToCreate.map((purchaseItem) => createPurchaseItem(id, purchaseItem))
     );
-
-    setLoadingText(null);
-    setOpenEdit(false);
-    setCurrentPurchase(null);
-  }
-
-  function onDeleteClick(id: string) {
-    setOpenDelete(true);
-    setCurrentPurchase(id);
-  }
-
-  async function handleDelete() {
-    if (!currentPurchase) return;
-
-    setLoadingText(
-      `Deleting Purchase Order #${purchasesWithItems.find((purchaseWithItems) => purchaseWithItems.id === currentPurchase)?.purchase_order_no}`
-    );
-
-    await deletePurchase(currentPurchase);
-
-    setLoadingText(null);
-    setOpenDelete(false);
-    setCurrentPurchase(null);
   }
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <CrudSection
         title="Expenses Overview"
-        description="Manage your business expenses"
-        buttonText="Add Expense"
-        onClick={onAddClick}
-      />
-
-      <SearchBar
+        description="Manage your product and supply expenses"
+        addButtonText="Add Expense"
+        tableTitle="Expenses"
+        rows={purchasesWithItems}
+        loading={loading}
         search={search}
         setSearch={setSearch}
-        placeholder="Search expenses by supplier or order number"
+        searchPlaceholder="Search expenses by order number"
+        Table={PurchasesTable}
+        Form={(props) => <PurchaseForm {...props} products={products} />}
+        getTitleForRow={(p) => p.purchase_order_no}
+        getNameForRow={(p) => p.purchase_order_no}
+        dialogs={purchaseDialogs}
+        onCreate={handleCreate}
+        onUpdate={handleUpdate}
+        onDelete={deletePurchase}
       />
-
-      <Card title={`Purchases (${filtered.length})`}>
-        <PurchasesTable
-          rows={purchasesWithItems}
-          loading={loading}
-          onEdit={(purchase) => onEditClick(purchase.id)}
-          onDelete={(purchase) => onDeleteClick(purchase.id)}
-        />
-      </Card>
-
-      <Modal
-        open={openAdd}
-        onClose={() => {
-          setOpenAdd(false);
-        }}
-        title={`Add New Purchase`}
-      >
-        <PurchaseForm
-          type="create"
-          products={products}
-          onCancel={() => {
-            setOpenAdd(false);
-          }}
-          onSubmit={(values) => handleAdd(values)}
-        />
-      </Modal>
-
-      <Modal
-        open={openEdit && !!currentPurchase}
-        onClose={() => {
-          setOpenEdit(false);
-          setCurrentPurchase(null);
-        }}
-        title={`Edit Purchase Order #${purchasesWithItems.find((purchaseWithItems) => purchaseWithItems.id === currentPurchase)?.purchase_order_no}`}
-      >
-        {currentPurchase && (
-          <PurchaseForm
-            type="edit"
-            initial={purchasesWithItems.find(
-              (purchaseWithItems) => purchaseWithItems.id === currentPurchase
-            )}
-            products={products}
-            onCancel={() => {
-              setOpenEdit(false);
-              setCurrentPurchase(null);
-            }}
-            onSubmit={(values) => handleEdit(values)}
-          />
-        )}
-      </Modal>
-
-      <ConfirmDialog
-        open={openDelete}
-        onCancel={() => {
-          setOpenDelete(false);
-          setCurrentPurchase(null);
-        }}
-        onConfirm={handleDelete}
-        title={`Delete Purchase Order #${
-          purchasesWithItems.find(
-            (purchaseWithItems) => purchaseWithItems.id === currentPurchase
-          )?.purchase_order_no
-        }?`}
-        description={`This will permanently remove Purchase Order #${
-          purchasesWithItems.find(
-            (purchaseWithItems) => purchaseWithItems.id === currentPurchase
-          )?.purchase_order_no
-        }.`}
-        confirmText="Delete"
-      />
-
-      <LoadingModal open={!!loadingText} text={loadingText ?? ''} />
     </div>
   );
 }
