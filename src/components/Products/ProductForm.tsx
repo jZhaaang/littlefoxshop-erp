@@ -1,4 +1,4 @@
-import { EntityForm, type FieldConfig, type Mode } from '..';
+import { EntityForm, type FieldConfig, type Mode } from '../common';
 import type { ProductValues, ProductType } from '../../lib/supabase/models';
 
 const PRODUCT_TYPES = [

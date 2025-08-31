@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EntityForm, type FieldConfig, type Mode } from '..';
+import { EntityForm, type FieldConfig, type Mode } from '../common';
 import type {
   Product,
   PurchaseItemInsert,

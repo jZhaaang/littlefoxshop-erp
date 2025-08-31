@@ -6,7 +6,7 @@ import {
   ConfirmDialog,
   Modal,
   LoadingModal,
-} from '../components';
+} from '../components/common';
 import { PurchasesTable } from '../components/Purchases';
 import { usePurchases } from '../lib/supabase/hooks/usePurchases';
 import { useProducts } from '../lib/supabase/hooks/useProducts';

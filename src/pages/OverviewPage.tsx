@@ -1,5 +1,5 @@
-import { Badge } from '../components/Badge';
-import { Card } from '../components/Card';
+import { Badge } from '../components/common/Badge';
+import { Card } from '../components/common/Card';
 import { recentOrders } from '../data/fake';
 
 type KpiProps = {

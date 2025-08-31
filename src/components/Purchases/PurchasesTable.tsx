@@ -1,5 +1,5 @@
 import type { PurchaseWithItems } from '../../lib/supabase/models';
-import { GridTable, type GridCol, Badge } from '..';
+import { GridTable, type GridCol, Badge } from '../common';
 
 type Props = {
   rows: PurchaseWithItems[];

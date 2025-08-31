@@ -1,6 +1,6 @@
 import './global.css';
 import { useState } from 'react';
-import { Layout } from './components/Layout';
+import { Layout } from './components/common';
 import OverviewPage from './pages/OverviewPage';
 import ProductsPage from './pages/ProductsPage';
 import ExpensesPage from './pages/ExpensesPage';
