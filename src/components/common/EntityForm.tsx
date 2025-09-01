@@ -141,12 +141,13 @@ export function EntityForm<T extends Record<string, any>>({
                     type="number"
                     step="0.01"
                     {...common}
-                    value={Number(val ?? 0)}
+                    value={val ?? ''}
                     onChange={(e) =>
                       setField(
                         field.name,
-                        (field.parse?.(e.target.value) ??
-                          Number(e.target.value)) as any
+                        e.target.value === ''
+                          ? ''
+                          : (field.parse?.(e.target.value) ?? e.target.value)
                       )
                     }
                   />
