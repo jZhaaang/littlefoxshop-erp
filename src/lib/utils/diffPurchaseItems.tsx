@@ -20,7 +20,7 @@ export function diffPurchaseItems(
       // new row
       itemsToCreate.push({
         purchase_id: '',
-        product_sku: purchaseItem.product_sku,
+        sku: purchaseItem.sku,
         quantity: purchaseItem.quantity,
       });
       continue;
@@ -31,8 +31,7 @@ export function diffPurchaseItems(
     if (!before) continue;
 
     const updated: PurchaseItemUpdate = {};
-    if (purchaseItem.product_sku !== before.product_sku)
-      updated.product_sku = purchaseItem.product_sku;
+    if (purchaseItem.sku !== before.sku) updated.sku = purchaseItem.sku;
     if (purchaseItem.quantity !== before.quantity)
       updated.quantity = purchaseItem.quantity;
 
