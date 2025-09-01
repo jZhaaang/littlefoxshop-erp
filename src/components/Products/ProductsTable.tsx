@@ -44,9 +44,11 @@ const columns: GridCol<Product>[] = [
     align: 'text-center',
     cell: (product) => (
       <div className="text-slate-700">
-        <div className="font-medium">${product.cost_rmb.toFixed(2)}</div>
+        <div className="font-medium">
+          ${(product.cost_rmb * 0.14).toFixed(2)}
+        </div>
         <div className="text-xs text-slate-500">
-          ¥{(product.cost_rmb * 0.14).toFixed(2)}
+          ¥{product.cost_rmb.toFixed(2)}
         </div>
       </div>
     ),
@@ -56,7 +58,9 @@ const columns: GridCol<Product>[] = [
     span: 1,
     align: 'text-center',
     cell: (product) => (
-      <span className="font-semibold">${product.price_usd.toFixed(2)}</span>
+      <span className="font-semibold">
+        ${product.price_usd ? product.price_usd.toFixed(2) : '0.00'}
+      </span>
     ),
   },
   {
