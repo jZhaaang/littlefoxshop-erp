@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      order_items: {
+        Row: {
+          id: string
+          order_id: string
+          product_sku: string
+          quantity: number
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          product_sku: string
+          quantity: number
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          product_sku?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_sku_fkey"
+            columns: ["product_sku"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["sku"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          customer_name: string | null
+          date_fulfilled: string | null
+          delivery_fee: number
+          id: string
+          notes: string | null
+          order_date: string
+          order_no: string
+          other_fees: number
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string | null
+          date_fulfilled?: string | null
+          delivery_fee?: number
+          id?: string
+          notes?: string | null
+          order_date?: string
+          order_no: string
+          other_fees?: number
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string | null
+          date_fulfilled?: string | null
+          delivery_fee?: number
+          id?: string
+          notes?: string | null
+          order_date?: string
+          order_no?: string
+          other_fees?: number
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           cost_rmb: number
@@ -85,13 +157,6 @@ export type Database = {
           sku?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "purchase_items_product_sku_fkey"
-            columns: ["sku"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["sku"]
-          },
           {
             foreignKeyName: "purchase_items_purchase_id_fkey"
             columns: ["purchase_id"]
@@ -175,7 +240,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      sku_kind: {
+        Args: { p_sku: string }
+        Returns: string
+      }
     }
     Enums: {
       product_type:

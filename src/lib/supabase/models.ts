@@ -7,6 +7,8 @@ export type Purchase = Database['public']['Tables']['purchases']['Row'];
 export type PurchaseItem =
   Database['public']['Tables']['purchase_items']['Row'];
 export type Supply = Database['public']['Tables']['supplies']['Row'];
+export type Order = Database['public']['Tables']['orders']['Row'];
+export type OrderItem = Database['public']['Tables']['order_items']['Row'];
 
 // Insert types
 export type ProductInsert = Database['public']['Tables']['products']['Insert'];
@@ -15,6 +17,9 @@ export type PurchaseInsert =
 export type PurchaseItemInsert =
   Database['public']['Tables']['purchase_items']['Insert'];
 export type SupplyInsert = Database['public']['Tables']['supplies']['Insert'];
+export type OrderInsert = Database['public']['Tables']['orders']['Insert'];
+export type OrderItemInsert =
+  Database['public']['Tables']['order_items']['Insert'];
 
 // Update types
 export type ProductUpdate = Database['public']['Tables']['products']['Update'];
@@ -23,6 +28,9 @@ export type PurchaseUpdate =
 export type PurchaseItemUpdate =
   Database['public']['Tables']['purchase_items']['Update'];
 export type SupplyUpdate = Database['public']['Tables']['supplies']['Update'];
+export type OrderUpdate = Database['public']['Tables']['orders']['Update'];
+export type OrderItemUpdate =
+  Database['public']['Tables']['order_items']['Update'];
 
 // UI/UX types
 export type ProductValues = Omit<Product, 'id' | 'created_at'>;
@@ -35,4 +43,10 @@ export type PurchaseWithItemsInsert = PurchaseInsert & {
 export type Inventory = {
   products: Product[];
   supplies: Supply[];
+};
+export type OrderWithItems = Order & {
+  orderItems: OrderItem[];
+};
+export type OrderWithItemsInsert = OrderInsert & {
+  orderItems: OrderItemInsert[];
 };
