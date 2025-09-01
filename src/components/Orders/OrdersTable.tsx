@@ -26,9 +26,12 @@ const columns: GridCol<OrderWithItems>[] = [
   {
     header: 'Items',
     span: 1,
-    cell: (row) => (
-      <span className="text-slate-600">{row.orderItems.length}</span>
-    ),
+    cell: (row) =>
+      row.orderItems.map((item) => (
+        <div className="text-slate-600">
+          {item.product_sku}: {item.quantity}
+        </div>
+      )),
   },
 ];
 
