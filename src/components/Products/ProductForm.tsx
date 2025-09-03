@@ -2,18 +2,19 @@ import { EntityForm, type FieldConfig, type Mode } from '../common';
 import type { ProductValues, ProductType } from '../../lib/supabase/models';
 
 const PRODUCT_TYPES = [
-  'Socks',
-  'Cupholder',
-  'AirPods Case',
-  'Packaging',
-  'Uncategorized',
+  '封口夹',
+  '杯垫',
+  '袜子',
+  '数据线收纳',
+  '耳机壳',
+  '无',
 ] as const satisfies readonly ProductType[];
 
 const EMPTY: ProductValues = {
   sku: '',
   name: '',
   supplier: '',
-  type: 'Uncategorized',
+  type: '无',
   price_usd: 0,
   cost_rmb: 0,
   image_url: null,

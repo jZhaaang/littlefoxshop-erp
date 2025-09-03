@@ -96,11 +96,11 @@ export type Database = {
           image_url: string | null
           min_stock: number
           name: string
-          price_usd: number
+          price_usd: number | null
           sku: string
           stock: number
-          supplier: string
-          type: Database["public"]["Enums"]["product_type"]
+          supplier: string | null
+          type: Database["public"]["Enums"]["product_types"] | null
         }
         Insert: {
           cost_rmb: number
@@ -111,11 +111,11 @@ export type Database = {
           image_url?: string | null
           min_stock?: number
           name?: string
-          price_usd: number
+          price_usd?: number | null
           sku?: string
           stock?: number
-          supplier?: string
-          type: Database["public"]["Enums"]["product_type"]
+          supplier?: string | null
+          type?: Database["public"]["Enums"]["product_types"] | null
         }
         Update: {
           cost_rmb?: number
@@ -126,11 +126,11 @@ export type Database = {
           image_url?: string | null
           min_stock?: number
           name?: string
-          price_usd?: number
+          price_usd?: number | null
           sku?: string
           stock?: number
-          supplier?: string
-          type?: Database["public"]["Enums"]["product_type"]
+          supplier?: string | null
+          type?: Database["public"]["Enums"]["product_types"] | null
         }
         Relationships: []
       }
@@ -246,12 +246,7 @@ export type Database = {
       }
     }
     Enums: {
-      product_type:
-        | "Socks"
-        | "Cupholder"
-        | "AirPods Case"
-        | "Packaging"
-        | "Uncategorized"
+      product_types: "封口夹" | "杯垫" | "袜子" | "数据线收纳" | "耳机壳" | "无"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -379,13 +374,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      product_type: [
-        "Socks",
-        "Cupholder",
-        "AirPods Case",
-        "Packaging",
-        "Uncategorized",
-      ],
+      product_types: ["封口夹", "杯垫", "袜子", "数据线收纳", "耳机壳", "无"],
     },
   },
 } as const

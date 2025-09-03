@@ -2,7 +2,7 @@ import type { Database } from './database';
 
 // Base types
 export type Product = Database['public']['Tables']['products']['Row'];
-export type ProductType = Database['public']['Enums']['product_type'];
+export type ProductType = Database['public']['Enums']['product_types'];
 export type Purchase = Database['public']['Tables']['purchases']['Row'];
 export type PurchaseItem =
   Database['public']['Tables']['purchase_items']['Row'];
