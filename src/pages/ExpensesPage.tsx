@@ -86,7 +86,9 @@ export default function ExpensesPage() {
           <PurchaseForm {...props} inventory={[...products, ...supplies]} />
         )}
         getTitleForRow={(p) => p.purchase_order_no}
-        getNameForRow={(p) => p.purchase_order_no}
+        getFilterForRow={(p) =>
+          p.purchaseItems.flatMap((item) => item.sku).join('')
+        }
         dialogs={purchaseDialogs}
         onCreate={handleCreate}
         onUpdate={handleUpdate}

@@ -81,11 +81,11 @@ export default function ExpensesPage() {
         loading={loading}
         search={search}
         setSearch={setSearch}
-        searchPlaceholder="Search orders by order number"
+        searchPlaceholder="Search orders by order or customer name"
         Table={OrdersTable}
         Form={(props) => <OrderForm {...props} products={[...products]} />}
         getTitleForRow={(p) => p.order_no}
-        getNameForRow={(p) => p.order_no}
+        getFilterForRow={(p) => p.customer_name!}
         dialogs={orderDialogs}
         onCreate={handleCreate}
         onUpdate={handleUpdate}

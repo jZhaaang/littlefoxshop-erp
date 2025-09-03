@@ -35,7 +35,7 @@ type CrudSectionProps<T extends { id: string }> = {
   }>;
 
   getTitleForRow: (row: T) => string;
-  getNameForRow: (row: T) => string;
+  getFilterForRow: (row: T) => string;
 
   dialogs: ReturnType<
     typeof import('../../lib/hooks/useCrudDialogs').useCrudDialogs
@@ -62,7 +62,7 @@ export function CrudSection<T extends { id: string }>(
     Table,
     Form,
     getTitleForRow,
-    getNameForRow,
+    getFilterForRow,
     dialogs,
     onCreate,
     onUpdate,
@@ -70,7 +70,7 @@ export function CrudSection<T extends { id: string }>(
   } = props;
 
   const filtered = rows.filter((r) =>
-    (getTitleForRow(r) + getNameForRow(r))
+    (getTitleForRow(r) + getFilterForRow(r))
       .toLowerCase()
       .includes(search.toLowerCase())
   );
@@ -79,7 +79,7 @@ export function CrudSection<T extends { id: string }>(
 
   async function handleAdd(values: any) {
     dialogs.setLoadingText(
-      `Adding ${getNameForRow({ ...(values as any), id: 'temp' } as T)}`
+      `Adding ${getTitleForRow({ ...(values as any), id: 'temp' } as T)}`
     );
     await onCreate(values);
     dialogs.setLoadingText(null);
@@ -170,7 +170,7 @@ export function CrudSection<T extends { id: string }>(
         title={current ? `Delete ${getTitleForRow(current)}?` : 'Delete?'}
         description={
           current
-            ? `This will permanently remove ${getNameForRow(current)}.`
+            ? `This will permanently remove ${getTitleForRow(current)}.`
             : ''
         }
         confirmText="Delete"

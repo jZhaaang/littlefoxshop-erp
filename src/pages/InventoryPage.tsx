@@ -38,11 +38,11 @@ export default function InventoryPage() {
         loading={productsLoading}
         search={productSearch}
         setSearch={setProductSearch}
-        searchPlaceholder="Search products by name or SKU"
+        searchPlaceholder="Search products by name, SKU, or supplier"
         Table={ProductsTable}
         Form={ProductForm}
         getTitleForRow={(p) => p.sku}
-        getNameForRow={(p) => p.name}
+        getFilterForRow={(p) => p.name + p.type + p.supplier}
         dialogs={productDialogs}
         onCreate={createProduct}
         onUpdate={updateProduct}
@@ -58,11 +58,11 @@ export default function InventoryPage() {
         loading={suppliesLoading}
         search={supplySearch}
         setSearch={setSupplySearch}
-        searchPlaceholder="Search supplies by name or SKU"
+        searchPlaceholder="Search supplies by name, SKU, or supplier"
         Table={SuppliesTable}
         Form={SupplyForm}
         getTitleForRow={(s) => s.sku}
-        getNameForRow={(s) => s.name}
+        getFilterForRow={(s) => s.name + s.supplier}
         dialogs={supplyDialogs}
         onCreate={createSupply}
         onUpdate={updateSupply}
