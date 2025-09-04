@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
 type CardProps = {
   title?: string;
@@ -7,7 +7,7 @@ type CardProps = {
   className?: string;
 };
 
-export function Card({ title, actions, children, className = "" }: CardProps) {
+export function Card({ title, actions, children, className = '' }: CardProps) {
   return (
     <div className={`bg-white border rounded-2xl ${className}`}>
       {(title || actions) && (
