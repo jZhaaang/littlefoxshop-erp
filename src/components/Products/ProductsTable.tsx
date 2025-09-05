@@ -98,10 +98,10 @@ export function ProductsTable({ rows, loading, onEdit, onDelete }: Props) {
           <img
             src={product.image_url}
             alt={product.name}
-            className="w-10 h-10 rounded-xl object-cover"
+            className="w-16 h-16 rounded-xl object-cover"
           ></img>
         ) : (
-          <div className="w-10 h-10 rounded-xl bg-slate-100 grid place-items-center text-slate-500">
+          <div className="w-16 h-16 rounded-xl text-2xl bg-slate-100 grid place-items-center">
             📦
           </div>
         )
