@@ -28,10 +28,20 @@ type Props = {
   type: Mode; // 'create' | 'edit'
   initial?: Partial<ProductValues>;
   onCancel: () => void;
-  onSubmit: (values: ProductValues) => Promise<void> | void;
+  onSubmit: (values: any) => Promise<void> | void;
+  onSubmitWithFile?: (
+    values: ProductValues,
+    file: File | null
+  ) => Promise<void> | void;
 };
 
 const fields: FieldConfig<ProductValues>[] = [
+  {
+    name: 'image_url',
+    label: 'Image',
+    type: 'image',
+    colSpan: 2,
+  },
   {
     name: 'name',
     label: 'Name',
@@ -55,7 +65,6 @@ const fields: FieldConfig<ProductValues>[] = [
     type: 'text',
     placeholder: 'e.g. Taobao',
     colSpan: 2,
-    validate: (v) => (!v ? 'Supplier is required' : null),
   },
   {
     name: 'type',
@@ -83,7 +92,6 @@ const fields: FieldConfig<ProductValues>[] = [
     parse: (s) => Number(s),
     validate: (v) => (Number(v) < 0 ? 'Must be ≥ 0' : null),
   },
-  { name: 'image_url', label: 'Image URL', type: 'text', colSpan: 2 },
   {
     name: 'description',
     label: 'Description',
@@ -99,7 +107,13 @@ const fields: FieldConfig<ProductValues>[] = [
   },
 ];
 
-export function ProductForm({ type, initial, onCancel, onSubmit }: Props) {
+export function ProductForm({
+  type,
+  initial,
+  onCancel,
+  onSubmit,
+  onSubmitWithFile,
+}: Props) {
   const initialValues: ProductValues = { ...EMPTY, ...(initial ?? {}) };
   return (
     <EntityForm<ProductValues>
@@ -108,6 +122,7 @@ export function ProductForm({ type, initial, onCancel, onSubmit }: Props) {
       fields={fields}
       onCancel={onCancel}
       onSubmit={onSubmit}
+      onSubmitWithFile={onSubmitWithFile}
       submitText={type === 'edit' ? 'Save Changes' : 'Add Product'}
     />
   );

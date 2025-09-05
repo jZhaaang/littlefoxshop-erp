@@ -93,11 +93,19 @@ export function ProductsTable({ rows, loading, onEdit, onDelete }: Props) {
       rows={rows}
       loading={!!loading}
       keyFor={(product) => product.id}
-      leading={() => (
-        <div className="w-10 h-10 rounded-xl bg-slate-100 grid place-items-center text-slate-500">
-          📦
-        </div>
-      )}
+      leading={(product) =>
+        product.image_url ? (
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="w-10 h-10 rounded-xl object-cover"
+          ></img>
+        ) : (
+          <div className="w-10 h-10 rounded-xl bg-slate-100 grid place-items-center text-slate-500">
+            📦
+          </div>
+        )
+      }
       leadingSpan={1}
       actions={(product) => (
         <div className="flex justify-center items-center gap-2">
