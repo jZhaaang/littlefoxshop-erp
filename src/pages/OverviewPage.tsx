@@ -1,6 +1,5 @@
 import { Badge } from '../components/common/Badge';
 import { Card } from '../components/common/Card';
-import { recentOrders } from '../data/fake';
 
 type KpiProps = {
   title: string;
@@ -51,25 +50,7 @@ export default function OverviewPage() {
 
       {/* Recent Orders */}
       <Card title="Recent Orders">
-        <div className="space-y-3">
-          {recentOrders.map((o) => (
-            <div
-              key={o.id}
-              className="flex items-center justify-between bg-white border rounded-xl px-4 py-3"
-            >
-              <div>
-                <div className="font-medium">{o.id}</div>
-                <div className="text-slate-500 text-sm">{o.customer}</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="text-slate-700 font-semibold">¥{o.amount}</div>
-                <Badge tone={o.status === 'completed' ? 'blue' : 'amber'}>
-                  {o.status}
-                </Badge>
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="space-y-3"></div>
       </Card>
     </div>
   );
