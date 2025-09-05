@@ -32,6 +32,7 @@ type CrudSectionProps<T extends { id: string }> = {
     initial?: T;
     onCancel: () => void;
     onSubmit: (values: any) => Promise<void> | void;
+    onSubmitWithFile?: (values: any, file: File | null) => Promise<void> | void;
   }>;
 
   getTitleForRow: (row: T) => string;
@@ -41,8 +42,8 @@ type CrudSectionProps<T extends { id: string }> = {
     typeof import('../../lib/hooks/useCrudDialogs').useCrudDialogs
   >;
 
-  onCreate: (values: any) => Promise<void>;
-  onUpdate: (id: string, values: any) => Promise<void>;
+  onCreate: (values: any, file?: File | null) => Promise<void>;
+  onUpdate: (id: string, values: any, file?: File | null) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 };
 
@@ -86,10 +87,30 @@ export function CrudSection<T extends { id: string }>(
     dialogs.closeAdd();
   }
 
+  async function handleAddWithFile(values: any, file: File | null) {
+    dialogs.setLoadingText(
+      `Adding ${getTitleForRow({ ...(values as any), id: 'temp' } as T)}`
+    );
+    await onCreate(values, file);
+    dialogs.setLoadingText(null);
+    dialogs.closeAdd();
+  }
+
   async function handleEdit(values: any) {
     if (!dialogs.currentId) return;
     dialogs.setLoadingText(`Editing ${getTitleForRow(current as T)}`);
+    console.log('test');
     await onUpdate(dialogs.currentId, values);
+    dialogs.setLoadingText(null);
+    dialogs.closeEdit();
+    dialogs.clearCurrent();
+  }
+
+  async function handleEditWithFile(values: any, file: File | null) {
+    if (!dialogs.currentId) return;
+    dialogs.setLoadingText(`Editing ${getTitleForRow(current as T)}`);
+    console.log('CrudSection.tsx File ', file);
+    await onUpdate(dialogs.currentId, values, file);
     dialogs.setLoadingText(null);
     dialogs.closeEdit();
     dialogs.clearCurrent();
@@ -134,7 +155,12 @@ export function CrudSection<T extends { id: string }>(
         onClose={dialogs.closeAdd}
         title={`Add New`}
       >
-        <Form type="create" onCancel={dialogs.closeAdd} onSubmit={handleAdd} />
+        <Form
+          type="create"
+          onCancel={dialogs.closeAdd}
+          onSubmit={handleAdd}
+          onSubmitWithFile={handleAddWithFile}
+        />
       </Modal>
 
       {/* Edit */}
@@ -155,6 +181,7 @@ export function CrudSection<T extends { id: string }>(
               dialogs.clearCurrent();
             }}
             onSubmit={handleEdit}
+            onSubmitWithFile={handleEditWithFile}
           />
         )}
       </Modal>
