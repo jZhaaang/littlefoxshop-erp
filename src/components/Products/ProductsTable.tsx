@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { ProductDetails } from '.';
 import type { Product } from '../../lib/supabase/models';
 import { GridTable, type GridCol, Badge } from '../common';
 
@@ -87,45 +89,51 @@ const columns: GridCol<Product>[] = [
 ];
 
 export function ProductsTable({ rows, loading, onEdit, onDelete }: Props) {
+  const [selected, setSelected] = useState<Product | null>(null);
+
   return (
-    <GridTable<Product>
-      columns={columns}
-      rows={rows}
-      loading={!!loading}
-      keyFor={(product) => product.id}
-      leading={(product) =>
-        product.image_url ? (
-          <img
-            src={product.image_url}
-            alt={product.name}
-            className="w-16 h-16 rounded-xl object-cover"
-          ></img>
-        ) : (
-          <div className="w-16 h-16 rounded-xl text-2xl bg-slate-100 grid place-items-center">
-            📦
+    <>
+      <GridTable<Product>
+        columns={columns}
+        rows={rows}
+        loading={!!loading}
+        keyFor={(product) => product.id}
+        leading={(product) =>
+          product.image_url ? (
+            <img
+              src={product.image_url}
+              alt={product.name}
+              className="w-16 h-16 rounded-xl object-cover"
+            ></img>
+          ) : (
+            <div className="w-16 h-16 rounded-xl text-2xl bg-slate-100 grid place-items-center">
+              📦
+            </div>
+          )
+        }
+        leadingSpan={1}
+        actions={(product) => (
+          <div className="flex justify-center items-center gap-2">
+            <button
+              title="Edit"
+              className="p-2 rounded-full text-slate-500 hover:text-blue-600 hover:bg-slate-100"
+              onClick={() => onEdit(product)}
+            >
+              ✏️
+            </button>
+            <button
+              title="Delete"
+              className="p-2 rounded-full text-slate-500 hover:text-red-600 hover:bg-slate-100"
+              onClick={() => onDelete(product)}
+            >
+              🗑️
+            </button>
           </div>
-        )
-      }
-      leadingSpan={1}
-      actions={(product) => (
-        <div className="flex justify-center items-center gap-2">
-          <button
-            title="Edit"
-            className="p-2 rounded-full text-slate-500 hover:text-blue-600 hover:bg-slate-100"
-            onClick={() => onEdit(product)}
-          >
-            ✏️
-          </button>
-          <button
-            title="Delete"
-            className="p-2 rounded-full text-slate-500 hover:text-red-600 hover:bg-slate-100"
-            onClick={() => onDelete(product)}
-          >
-            🗑️
-          </button>
-        </div>
-      )}
-      actionsSpan={1}
-    />
+        )}
+        actionsSpan={1}
+        onRowClick={(p) => setSelected(p)}
+      />
+      <ProductDetails product={selected} onClose={() => setSelected(null)} />
+    </>
   );
 }

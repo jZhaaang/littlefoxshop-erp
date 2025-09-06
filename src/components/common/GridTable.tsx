@@ -18,6 +18,7 @@ type Props<T> = {
   actionsSpan?: number;
   loading?: boolean;
   emptyNode?: ReactNode;
+  onRowClick?: (row: T) => void;
 };
 
 const spanClass: Record<number, string> = {
@@ -47,6 +48,7 @@ export function GridTable<T>({
   emptyNode = (
     <div className="py-8 text-center text-sm text-slate-500">No data</div>
   ),
+  onRowClick,
 }: Props<T>) {
   return (
     <div className="divide-y">
@@ -73,27 +75,37 @@ export function GridTable<T>({
       ) : rows.length === 0 ? (
         emptyNode
       ) : (
-        rows.map((row) => (
-          <div
-            key={keyFor(row)}
-            className="py-4 px-2 grid grid-cols-12 items-center gap-2 text-sm"
-          >
-            {leadingSpan > 0 && (
-              <div className={`col-span-${leadingSpan}`}>{leading?.(row)}</div>
-            )}
-            {columns.map((c, i) => (
-              <div
-                key={i}
-                className={`col-span-${c.span} ${c.align ?? 'text-left'}`}
-              >
-                {c.cell(row)}
-              </div>
-            ))}
-            {actionsSpan > 0 && (
-              <div className={`col-span-${actionsSpan}`}>{actions?.(row)}</div>
-            )}
-          </div>
-        ))
+        rows.map((row) => {
+          const clickable = !!onRowClick;
+          return (
+            <div
+              key={keyFor(row)}
+              className={`py-4 px-2 grid grid-cols-12 items-center gap-2 text-sm ${clickable ? 'cursor-pointer hover:bg-slate-50' : ''}`}
+              onClick={clickable ? () => onRowClick(row) : undefined}
+              role={clickable ? 'button' : undefined}
+              tabIndex={clickable ? 0 : undefined}
+            >
+              {leadingSpan > 0 && (
+                <div className={`col-span-${leadingSpan}`}>
+                  {leading?.(row)}
+                </div>
+              )}
+              {columns.map((c, i) => (
+                <div
+                  key={i}
+                  className={`col-span-${c.span} ${c.align ?? 'text-left'}`}
+                >
+                  {c.cell(row)}
+                </div>
+              ))}
+              {actionsSpan > 0 && (
+                <div className={`col-span-${actionsSpan}`}>
+                  {actions?.(row)}
+                </div>
+              )}
+            </div>
+          );
+        })
       )}
     </div>
   );
