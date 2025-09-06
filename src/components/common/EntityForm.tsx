@@ -220,7 +220,10 @@ export function EntityForm<T extends Record<string, any>>({
                 {field.type === 'image' && (
                   <ImagePicker
                     initialUrl={(val as string | null) ?? null}
-                    onChangeFile={(file) => setFile(file)}
+                    onChangeFile={(file) => {
+                      setFile(file);
+                      if (!file) setField(field.name, null as any);
+                    }}
                   />
                 )}
 

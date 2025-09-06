@@ -58,6 +58,8 @@ export function useProducts() {
       if (file) {
         const url = await uploadProductImage(id, file);
         payload = { ...payload, image_url: url };
+      } else if (!file && product.image_url === null) {
+        payload.image_url = null;
       }
 
       const { data, error } = await updateProductById(id, payload);

@@ -16,7 +16,7 @@ export function ImagePicker({
   className,
 }: ImagePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(initialUrl ?? null);
   const [err, setErr] = useState<string | null>(null);
 
   const maxBytes = maxSizeMB * 1024 * 1024;
@@ -48,9 +48,9 @@ export function ImagePicker({
       <div
         className={`mt-1 overflow-hidden rounded-lg border aspect-square ${disabled ? 'bg-gray-100' : 'bg-white'}`}
       >
-        {preview || initialUrl ? (
+        {preview ? (
           <img
-            src={preview ?? initialUrl ?? undefined}
+            src={preview ?? undefined}
             alt="Preview"
             className="h-full w-full object-cover"
             draggable={false}
@@ -82,7 +82,7 @@ export function ImagePicker({
       />
 
       <div className="mt-2 flex gap-2">
-        {(preview || initialUrl) && (
+        {preview && (
           <button
             type="button"
             onClick={() => assignFile(null)}
