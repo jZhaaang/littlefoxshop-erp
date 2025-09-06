@@ -4,7 +4,6 @@ export type ImagePickerProps = {
   initialUrl?: string | null;
   disabled?: boolean;
   maxSizeMB?: number;
-  aspect?: 'video' | 'square';
   onChangeFile: (file: File | null) => void;
   className?: string;
 };
@@ -13,12 +12,10 @@ export function ImagePicker({
   initialUrl,
   disabled,
   maxSizeMB = 5,
-  aspect = 'square',
   onChangeFile,
   className,
 }: ImagePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [dragOver, setDragOver] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
@@ -46,34 +43,10 @@ export function ImagePicker({
     [maxBytes, maxSizeMB, onChangeFile]
   );
 
-  const onDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragOver(false);
-    if (disabled) return;
-    assignFile(e.dataTransfer.files?.[0] ?? null);
-  };
-
-  const aspectClass = aspect === 'square' ? 'aspect-square' : 'aspect-video';
-
   return (
     <div className={className}>
       <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          if (!disabled) setDragOver(true);
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={onDrop}
-        className={[
-          'mt-1 overflow-hidden rounded-lg border',
-          disabled
-            ? 'bg-gray-100'
-            : dragOver
-              ? 'border-blue-500 bg-blue-50'
-              : 'bg-white',
-          aspectClass,
-        ].join(' ')}
+        className={`mt-1 overflow-hidden rounded-lg border aspect-square ${disabled ? 'bg-gray-100' : 'bg-white'}`}
       >
         {preview || initialUrl ? (
           <img
@@ -84,7 +57,6 @@ export function ImagePicker({
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center text-center px-4">
-            <p className="text-sm text-gray-600">Drag & drop an image, or</p>
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
