@@ -2,13 +2,12 @@ import { supabase } from './client';
 
 const BUCKET = 'product-images';
 
-export async function uploadProductImage(params: {
-  sku: string;
-  file: File;
-}): Promise<string> {
-  const { sku, file } = params;
+export async function uploadProductImage(
+  id: string,
+  file: File
+): Promise<string> {
   const ext = file.name.split('.').pop() || 'jpg';
-  const key = `product/${sku}/${crypto.randomUUID()}.${ext}`;
+  const key = `product/${id}/${crypto.randomUUID()}.${ext}`;
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET)

@@ -29,17 +29,13 @@ export function useProducts() {
   const createProduct = async (product: ProductInsert, file?: File | null) => {
     setLoading(true);
     try {
-      let payload: ProductInsert = { ...product };
-
-      if (file) {
-        const url = await uploadProductImage({ file, sku: product.sku! });
-        payload = { ...payload, image_url: url };
-      }
-
-      const { data, error } = await createProductQuery(payload);
+      const { data, error } = await createProductQuery(product);
       if (error) throw error;
       if (data) {
         setProducts((prev) => [...prev, data]);
+        if (file) {
+          await updateProduct(data.id, product, file);
+        }
       }
     } catch (err) {
       setError(err as Error);
@@ -60,7 +56,7 @@ export function useProducts() {
       let payload: ProductUpdate = { ...product };
 
       if (file) {
-        const url = await uploadProductImage({ file, sku: product.sku! });
+        const url = await uploadProductImage(id, file);
         payload = { ...payload, image_url: url };
       }
 
