@@ -117,14 +117,22 @@ export function ProductsTable({ rows, loading, onEdit, onDelete }: Props) {
             <button
               title="Edit"
               className="p-2 rounded-full text-slate-500 hover:text-blue-600 hover:bg-slate-100"
-              onClick={() => onEdit(product)}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onEdit(product);
+              }}
             >
               ✏️
             </button>
             <button
               title="Delete"
               className="p-2 rounded-full text-slate-500 hover:text-red-600 hover:bg-slate-100"
-              onClick={() => onDelete(product)}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onDelete(product);
+              }}
             >
               🗑️
             </button>
