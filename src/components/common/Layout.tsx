@@ -41,6 +41,7 @@ export function Layout({ page, setPage, children }: LayoutProps) {
     <div className="min-h-screen bg-slate-50">
       <header className="bg-white border-b">
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center gap-6">
+          <img src="assets/logo-icon.png" alt="Logo" className="h-12 w-12" />
           <div className="text-2xl font-bold">
             LittleFoxShop{' '}
             <span className="font-medium text-slate-500">ERP</span>
