@@ -2,26 +2,22 @@ import { useEffect, type ReactNode } from 'react';
 
 type ModalProps = {
   open: boolean;
-  onClose: () => void;
   title: string;
   children: ReactNode;
   footer?: ReactNode;
   widthClassName?: string;
+  onClose: () => void;
 };
 
 export function Modal({
   open,
-  onClose,
   title,
   children,
   footer,
   widthClassName = 'max-w-xl',
+  onClose,
 }: ModalProps) {
-  if (!open) return;
-
   useEffect(() => {
-    if (!open) return;
-
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation();
@@ -30,8 +26,11 @@ export function Modal({
     };
 
     window.addEventListener('keydown', onKeyDown);
+
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [open, onClose]);
+
+  if (!open) return null;
 
   return (
     <div
