@@ -1,15 +1,11 @@
-import { useState } from 'react';
 import { OrdersTable, OrderForm } from '../components/Orders';
 import { useOrders } from '../lib/supabase/hooks/useOrders';
 import { useProducts } from '../lib/supabase/hooks/useProducts';
 import type { OrderWithItemsInsert } from '../lib/supabase/models';
 import { diffOrderItems } from '../lib/utils/diffOrderItems';
 import { CrudSection } from '../components/common/';
-import { useCrudDialogs } from '../lib/hooks/useCrudDialogs';
 
 export default function ExpensesPage() {
-  const [search, setSearch] = useState('');
-
   const {
     ordersWithItems,
     loading,
@@ -21,7 +17,6 @@ export default function ExpensesPage() {
     deleteOrderItem,
   } = useOrders();
   const { products } = useProducts();
-  const orderDialogs = useCrudDialogs();
 
   async function handleCreate(values: OrderWithItemsInsert) {
     const order = {
@@ -79,14 +74,13 @@ export default function ExpensesPage() {
         tableTitle="Orders"
         rows={ordersWithItems}
         loading={loading}
-        search={search}
-        setSearch={setSearch}
-        searchPlaceholder="Search orders by order or customer name"
         Table={OrdersTable}
         Form={(props) => <OrderForm {...props} products={[...products]} />}
-        getTitleForRow={(p) => p.order_no}
-        getFilterForRow={(p) => p.customer_name!}
-        dialogs={orderDialogs}
+        filters={{
+          getRowLabel: (o) => o.order_no,
+          getSearchParams: (o) => [o.order_no, o.customer_name],
+          searchParams: ['order #, customer name'],
+        }}
         onCreate={handleCreate}
         onUpdate={handleUpdate}
         onDelete={deleteOrder}

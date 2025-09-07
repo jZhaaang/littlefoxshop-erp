@@ -1,15 +1,10 @@
-import { useState } from 'react';
 import { ProductForm, ProductsTable } from '../components/Products';
 import { useProducts } from '../lib/supabase/hooks/useProducts';
 import { CrudSection } from '../components/common/CrudSection';
-import { useCrudDialogs } from '../lib/hooks/useCrudDialogs';
 import { useSupplies } from '../lib/supabase/hooks/useSupplies';
 import { SuppliesTable, SupplyForm } from '../components/Supplies';
 
 export default function InventoryPage() {
-  const [productSearch, setProductSearch] = useState('');
-  const [supplySearch, setSupplySearch] = useState('');
-
   const {
     products,
     loading: productsLoading,
@@ -24,8 +19,6 @@ export default function InventoryPage() {
     updateSupply,
     deleteSupply,
   } = useSupplies();
-  const productDialogs = useCrudDialogs();
-  const supplyDialogs = useCrudDialogs();
 
   return (
     <div className="space-y-6">
@@ -36,14 +29,13 @@ export default function InventoryPage() {
         tableTitle="Products"
         rows={products}
         loading={productsLoading}
-        search={productSearch}
-        setSearch={setProductSearch}
-        searchPlaceholder="Search products by name, SKU, or supplier"
         Table={ProductsTable}
         Form={ProductForm}
-        getTitleForRow={(p) => p.sku}
-        getFilterForRow={(p) => p.name + p.type + p.supplier}
-        dialogs={productDialogs}
+        filters={{
+          getRowLabel: (p) => p.name,
+          getSearchParams: (p) => [p.name, p.sku, p.supplier],
+          searchParams: ['name', 'SKU', 'supplier'],
+        }}
         onCreate={createProduct}
         onUpdate={updateProduct}
         onDelete={deleteProduct}
@@ -56,14 +48,13 @@ export default function InventoryPage() {
         tableTitle="Supplies"
         rows={supplies}
         loading={suppliesLoading}
-        search={supplySearch}
-        setSearch={setSupplySearch}
-        searchPlaceholder="Search supplies by name, SKU, or supplier"
         Table={SuppliesTable}
         Form={SupplyForm}
-        getTitleForRow={(s) => s.sku}
-        getFilterForRow={(s) => s.name + s.supplier}
-        dialogs={supplyDialogs}
+        filters={{
+          getRowLabel: (s) => s.name,
+          getSearchParams: (s) => [s.name, s.sku, s.supplier],
+          searchParams: ['name', 'SKU', 'supplier'],
+        }}
         onCreate={createSupply}
         onUpdate={updateSupply}
         onDelete={deleteSupply}

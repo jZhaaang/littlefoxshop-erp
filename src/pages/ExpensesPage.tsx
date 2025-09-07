@@ -1,16 +1,12 @@
-import { useState } from 'react';
 import { PurchasesTable, PurchaseForm } from '../components/Purchases';
 import { usePurchases } from '../lib/supabase/hooks/usePurchases';
 import { useProducts } from '../lib/supabase/hooks/useProducts';
 import type { PurchaseWithItemsInsert } from '../lib/supabase/models';
 import { diffPurchaseItems } from '../lib/utils/diffPurchaseItems';
 import { CrudSection } from '../components/common/';
-import { useCrudDialogs } from '../lib/hooks/useCrudDialogs';
 import { useSupplies } from '../lib/supabase/hooks/useSupplies';
 
 export default function ExpensesPage() {
-  const [search, setSearch] = useState('');
-
   const {
     purchasesWithItems,
     loading,
@@ -23,7 +19,6 @@ export default function ExpensesPage() {
   } = usePurchases();
   const { products } = useProducts();
   const { supplies } = useSupplies();
-  const purchaseDialogs = useCrudDialogs();
 
   async function handleCreate(values: PurchaseWithItemsInsert) {
     const purchase = {
@@ -78,18 +73,15 @@ export default function ExpensesPage() {
         tableTitle="Expenses"
         rows={purchasesWithItems}
         loading={loading}
-        search={search}
-        setSearch={setSearch}
-        searchPlaceholder="Search expenses by order number"
         Table={PurchasesTable}
         Form={(props) => (
           <PurchaseForm {...props} inventory={[...products, ...supplies]} />
         )}
-        getTitleForRow={(p) => p.purchase_order_no}
-        getFilterForRow={(p) =>
-          p.purchaseItems.flatMap((item) => item.sku).join('')
-        }
-        dialogs={purchaseDialogs}
+        filters={{
+          getRowLabel: (p) => p.purchase_order_no,
+          getSearchParams: (p) => [p.purchase_order_no],
+          searchParams: ['purchase order #'],
+        }}
         onCreate={handleCreate}
         onUpdate={handleUpdate}
         onDelete={deletePurchase}

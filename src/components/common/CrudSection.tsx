@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Card,
   SearchBar,
@@ -6,7 +6,28 @@ import {
   ConfirmDialog,
   Modal,
   LoadingModal,
+  type Mode,
 } from '../common';
+
+export type TableProps<T> = {
+  rows: T[];
+  loading?: boolean;
+  onEdit: (row: T) => void;
+  onDelete: (row: T) => void;
+};
+
+export type FormProps<T> = {
+  type: Mode;
+  initial?: T;
+  onCancel: () => void;
+  onSubmit: (values: any, file?: File | null) => Promise<void>;
+};
+
+type FilterProps<T> = {
+  getRowLabel: (row: T) => string;
+  getSearchParams: (row: T) => (string | null)[];
+  searchParams: string[];
+};
 
 type CrudSectionProps<T extends { id: string }> = {
   title: string;
@@ -17,112 +38,79 @@ type CrudSectionProps<T extends { id: string }> = {
   rows: T[];
   loading?: boolean;
 
-  search: string;
-  setSearch: Dispatch<SetStateAction<string>>;
-  searchPlaceholder: string;
-
-  Table: React.ComponentType<{
-    rows: T[];
-    loading?: boolean;
-    onEdit: (row: T) => void;
-    onDelete: (row: T) => void;
-  }>;
-  Form: React.ComponentType<{
-    type: 'create' | 'edit';
-    initial?: T;
-    onCancel: () => void;
-    onSubmit: (values: any) => Promise<void> | void;
-    onSubmitWithFile?: (values: any, file: File | null) => Promise<void> | void;
-  }>;
-
-  getTitleForRow: (row: T) => string;
-  getFilterForRow: (row: T) => string;
-
-  dialogs: ReturnType<
-    typeof import('../../lib/hooks/useCrudDialogs').useCrudDialogs
-  >;
+  Table: React.ComponentType<TableProps<T>>;
+  Form: React.ComponentType<FormProps<T>>;
+  filters: FilterProps<T>;
 
   onCreate: (values: any, file?: File | null) => Promise<void>;
   onUpdate: (id: string, values: any, file?: File | null) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 };
 
-export function CrudSection<T extends { id: string }>(
-  props: CrudSectionProps<T>
-) {
-  const {
-    title,
-    description,
-    addButtonText,
-    tableTitle,
-    rows,
-    loading,
-    search,
-    setSearch,
-    searchPlaceholder,
-    Table,
-    Form,
-    getTitleForRow,
-    getFilterForRow,
-    dialogs,
-    onCreate,
-    onUpdate,
-    onDelete,
-  } = props;
+export function CrudSection<T extends { id: string }>({
+  title,
+  description,
+  addButtonText,
+  tableTitle,
+  rows,
+  loading,
+  Table,
+  Form,
+  filters,
+  onCreate,
+  onUpdate,
+  onDelete,
+}: CrudSectionProps<T>) {
+  const [search, setSearch] = useState('');
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openEditId, setOpenEditId] = useState<string | null>(null);
+  const [openDeleteId, setOpenDeleteId] = useState<string | null>(null);
+  const [loadingText, setLoadingText] = useState<string | null>(null);
 
-  const filtered = rows.filter((r) =>
-    (getTitleForRow(r) + getFilterForRow(r))
-      .toLowerCase()
-      .includes(search.toLowerCase())
+  const filtered = useMemo(
+    () =>
+      rows.filter((r) =>
+        (filters.getRowLabel(r) + filters.getSearchParams(r).join(''))
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      ),
+    [rows, search, filters]
   );
 
-  const current = rows.find((r) => r.id === dialogs.currentId) || null;
+  const currentEdit = rows.find((r) => r.id === openEditId) || null;
+  const currentDelete = rows.find((r) => r.id === openDeleteId) || null;
 
-  async function handleAdd(values: any) {
-    dialogs.setLoadingText(
-      `Adding ${getTitleForRow({ ...(values as any), id: 'temp' } as T)}`
-    );
-    await onCreate(values);
-    dialogs.setLoadingText(null);
-    dialogs.closeAdd();
+  async function handleAdd(values: any, file?: File | null) {
+    if (!openAdd) return;
+    try {
+      setLoadingText(`Adding ${filters.getRowLabel(values)}`);
+      await onCreate(values, file);
+      setOpenAdd(false);
+    } finally {
+      setLoadingText(null);
+    }
   }
 
-  async function handleAddWithFile(values: any, file: File | null) {
-    dialogs.setLoadingText(
-      `Adding ${getTitleForRow({ ...(values as any), id: 'temp' } as T)}`
-    );
-    await onCreate(values, file);
-    dialogs.setLoadingText(null);
-    dialogs.closeAdd();
-  }
-
-  async function handleEdit(values: any) {
-    if (!dialogs.currentId) return;
-    dialogs.setLoadingText(`Editing ${getTitleForRow(current as T)}`);
-    console.log('test');
-    await onUpdate(dialogs.currentId, values);
-    dialogs.setLoadingText(null);
-    dialogs.closeEdit();
-    dialogs.clearCurrent();
-  }
-
-  async function handleEditWithFile(values: any, file: File | null) {
-    if (!dialogs.currentId) return;
-    dialogs.setLoadingText(`Editing ${getTitleForRow(current as T)}`);
-    console.log('CrudSection.tsx File ', file);
-    await onUpdate(dialogs.currentId, values, file);
-    dialogs.setLoadingText(null);
-    dialogs.closeEdit();
-    dialogs.clearCurrent();
+  async function handleEdit(values: any, file?: File | null) {
+    if (!openEditId || !currentEdit) return;
+    try {
+      setLoadingText(`Editing ${filters.getRowLabel(currentEdit)}`);
+      await onUpdate(openEditId, values, file);
+      setOpenEditId(null);
+    } finally {
+      setLoadingText(null);
+    }
   }
 
   async function handleDelete() {
-    if (!dialogs.currentId) return;
-    dialogs.setLoadingText(`Deleting ${getTitleForRow(current as T)}`);
-    await onDelete(dialogs.currentId);
-    dialogs.setLoadingText(null);
-    dialogs.closeDelete();
-    dialogs.clearCurrent();
+    if (!openDeleteId || !currentDelete) return;
+    try {
+      setLoadingText(`Deleting ${filters.getRowLabel(currentDelete)}`);
+      await onDelete(openDeleteId);
+      setOpenDeleteId(null);
+    } finally {
+      setLoadingText(null);
+    }
   }
 
   return (
@@ -131,82 +119,70 @@ export function CrudSection<T extends { id: string }>(
         title={title}
         description={description}
         buttonText={addButtonText}
-        onClick={dialogs.startAdd}
+        onClick={() => setOpenAdd(true)}
       />
 
       <SearchBar
         search={search}
         setSearch={setSearch}
-        placeholder={searchPlaceholder}
+        placeholder={`Search by ${filters.searchParams.join(', ')}`}
       />
 
       <Card title={`${tableTitle} (${filtered.length})`}>
         <Table
           rows={filtered}
           loading={loading}
-          onEdit={(row) => dialogs.startEdit(row.id)}
-          onDelete={(row) => dialogs.startDelete(row.id)}
+          onEdit={(row) => setOpenEditId(row.id)}
+          onDelete={(row) => setOpenDeleteId(row.id)}
         />
       </Card>
 
       {/* Add */}
-      <Modal
-        open={dialogs.openAdd}
-        onClose={dialogs.closeAdd}
-        title={`Add New`}
-      >
+      <Modal open={openAdd} onClose={() => setOpenAdd(false)} title={`Add New`}>
         <Form
           type="create"
-          onCancel={dialogs.closeAdd}
+          onCancel={() => setOpenAdd(false)}
           onSubmit={handleAdd}
-          onSubmitWithFile={handleAddWithFile}
         />
       </Modal>
 
       {/* Edit */}
       <Modal
-        open={dialogs.openEdit && !!current}
-        onClose={() => {
-          dialogs.closeEdit();
-          dialogs.clearCurrent();
-        }}
-        title={current ? `Edit ${getTitleForRow(current)}` : 'Edit'}
+        open={!!openEditId}
+        onClose={() => setOpenEditId(null)}
+        title={
+          currentEdit ? `Edit ${filters.getRowLabel(currentEdit)}` : 'Edit'
+        }
       >
-        {current && (
+        {currentEdit && (
           <Form
             type="edit"
-            initial={current}
-            onCancel={() => {
-              dialogs.closeEdit();
-              dialogs.clearCurrent();
-            }}
+            initial={currentEdit}
+            onCancel={() => setOpenEditId(null)}
             onSubmit={handleEdit}
-            onSubmitWithFile={handleEditWithFile}
           />
         )}
       </Modal>
 
       {/* Delete */}
       <ConfirmDialog
-        open={dialogs.openDelete}
-        onCancel={() => {
-          dialogs.closeDelete();
-          dialogs.clearCurrent();
-        }}
+        open={!!openDeleteId}
+        onCancel={() => setOpenDeleteId(null)}
         onConfirm={handleDelete}
-        title={current ? `Delete ${getTitleForRow(current)}?` : 'Delete?'}
+        title={
+          currentDelete
+            ? `Delete ${filters.getRowLabel(currentDelete)}?`
+            : 'Delete?'
+        }
         description={
-          current
-            ? `This will permanently remove ${getTitleForRow(current)}.`
+          currentDelete
+            ? `This will permanently remove ${filters.getRowLabel(currentDelete)}.`
             : ''
         }
         confirmText="Delete"
       />
 
-      <LoadingModal
-        open={!!dialogs.loadingText}
-        text={dialogs.loadingText ?? ''}
-      />
+      <LoadingModal open={!!loadingText} text={loadingText ?? ''} />
     </div>
   );
 }
