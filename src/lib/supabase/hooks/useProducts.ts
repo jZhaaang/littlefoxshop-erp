@@ -6,7 +6,6 @@ import {
   updateProductById,
   deleteProductById,
 } from '../queries/products';
-import { uploadProductImage } from '../storage';
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -26,16 +25,13 @@ export function useProducts() {
     }
   };
 
-  const createProduct = async (product: ProductInsert, file?: File | null) => {
+  const createProduct = async (product: ProductInsert) => {
     setLoading(true);
     try {
       const { data, error } = await createProductQuery(product);
       if (error) throw error;
       if (data) {
         setProducts((prev) => [...prev, data]);
-        if (file) {
-          await updateProduct(data.id, product, file);
-        }
       }
     } catch (err) {
       setError(err as Error);
@@ -44,25 +40,10 @@ export function useProducts() {
     }
   };
 
-  const updateProduct = async (
-    id: string,
-    product: ProductUpdate,
-    file?: File | null
-  ) => {
+  const updateProduct = async (id: string, product: ProductUpdate) => {
     setLoading(true);
-    console.log('Product ', product);
-    console.log('File ', file);
     try {
-      let payload: ProductUpdate = { ...product };
-
-      if (file) {
-        const url = await uploadProductImage(id, file);
-        payload = { ...payload, image_url: url };
-      } else if (!file && product.image_url === null) {
-        payload.image_url = null;
-      }
-
-      const { data, error } = await updateProductById(id, payload);
+      const { data, error } = await updateProductById(id, product);
       if (error) throw error;
       if (data) {
         setProducts((prev) =>
