@@ -1,5 +1,16 @@
-import { EntityForm, type FieldConfig, type Mode } from '../common';
-import type { ProductValues, ProductType } from '../../lib/supabase/models';
+import {
+  EntityForm,
+  ImagePicker,
+  type FieldConfig,
+  type Mode,
+} from '../common';
+import type {
+  ImagesDraft,
+  ProductImage,
+  ProductType,
+  ProductWithImagesInsert,
+} from '../../lib/supabase/models';
+import { useState } from 'react';
 
 const PRODUCT_TYPES = [
   '封口夹',
@@ -10,38 +21,28 @@ const PRODUCT_TYPES = [
   '无',
 ] as const satisfies readonly ProductType[];
 
-const EMPTY: ProductValues = {
+const EMPTY: ProductWithImagesInsert = {
   sku: '',
   name: '',
   supplier: '',
   type: '无',
   price_usd: 0,
   cost_rmb: 0,
-  image_url: null,
   description: null,
   details: null,
   min_stock: 0,
   stock: 0,
+  imagesDraft: { existing: [], added: [], removedIds: [] },
 };
 
 type Props = {
   type: Mode; // 'create' | 'edit'
-  initial?: Partial<ProductValues>;
+  initial?: ProductWithImagesInsert;
   onCancel: () => void;
-  onSubmit: (values: any) => Promise<void> | void;
-  onSubmitWithFile?: (
-    values: ProductValues,
-    file: File | null
-  ) => Promise<void> | void;
+  onSubmit: (values: ProductWithImagesInsert) => Promise<void> | void;
 };
 
-const fields: FieldConfig<ProductValues>[] = [
-  {
-    name: 'image_url',
-    label: 'Image',
-    type: 'image',
-    colSpan: 2,
-  },
+const fields: FieldConfig<ProductWithImagesInsert>[] = [
   {
     name: 'name',
     label: 'Name',
@@ -107,23 +108,36 @@ const fields: FieldConfig<ProductValues>[] = [
   },
 ];
 
-export function ProductForm({
-  type,
-  initial,
-  onCancel,
-  onSubmit,
-  onSubmitWithFile,
-}: Props) {
-  const initialValues: ProductValues = { ...EMPTY, ...(initial ?? {}) };
+export function ProductForm({ type, initial, onCancel, onSubmit }: Props) {
+  const initialValues: ProductWithImagesInsert = {
+    ...EMPTY,
+    ...(initial ?? {}),
+  };
+
+  const [imagesDraft, setImagesDraft] = useState<ImagesDraft>({
+    existing: (initialValues.imagesDraft!.existing as ProductImage[]) ?? [],
+    added: [],
+    removedIds: [],
+  });
+
+  const handleSubmit = (values: ProductWithImagesInsert) => {
+    const payload = {
+      ...values,
+      imagesDraft,
+    };
+    onSubmit(payload);
+  };
+
   return (
-    <EntityForm<ProductValues>
+    <EntityForm<ProductWithImagesInsert>
       mode={type}
       initial={initialValues}
       fields={fields}
       onCancel={onCancel}
-      onSubmit={onSubmit}
-      onSubmitWithFile={onSubmitWithFile}
+      onSubmit={handleSubmit}
       submitText={type === 'edit' ? 'Save Changes' : 'Add Product'}
-    />
+    >
+      <ImagePicker value={imagesDraft} onChange={setImagesDraft} />
+    </EntityForm>
   );
 }

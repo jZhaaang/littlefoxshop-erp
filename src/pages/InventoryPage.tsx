@@ -3,10 +3,14 @@ import { useProducts } from '../lib/supabase/hooks/useProducts';
 import { CrudSection } from '../components/common/CrudSection';
 import { useSupplies } from '../lib/supabase/hooks/useSupplies';
 import { SuppliesTable, SupplyForm } from '../components/Supplies';
+import type {
+  ImagesDraft,
+  ProductWithImagesInsert,
+} from '../lib/supabase/models';
 
 export default function InventoryPage() {
   const {
-    products,
+    productsWithImages,
     loading: productsLoading,
     createProduct,
     updateProduct,
@@ -20,6 +24,48 @@ export default function InventoryPage() {
     deleteSupply,
   } = useSupplies();
 
+  const conformedProducts = productsWithImages.map((productWithImages) => {
+    return {
+      ...productWithImages,
+      imagesDraft: {
+        existing: productWithImages.images,
+        added: [],
+        removedIds: [],
+      } as ImagesDraft,
+    };
+  });
+
+  async function handleCreate(values: ProductWithImagesInsert) {
+    const product = {
+      sku: values.sku,
+      name: values.name,
+      supplier: values.supplier,
+      type: values.type,
+      price_usd: values.price_usd,
+      cost_rmb: values.cost_rmb,
+      description: values.description,
+      details: values.details,
+      min_stock: values.min_stock,
+    };
+
+    await createProduct(product, values.imagesDraft!);
+  }
+  async function handleUpdate(id: string, values: ProductWithImagesInsert) {
+    const product = {
+      sku: values.sku,
+      name: values.name,
+      supplier: values.supplier,
+      type: values.type,
+      price_usd: values.price_usd,
+      cost_rmb: values.cost_rmb,
+      description: values.description,
+      details: values.details,
+      min_stock: values.min_stock,
+    };
+
+    await updateProduct(id, product, values.imagesDraft!);
+  }
+
   return (
     <div className="space-y-6">
       <CrudSection
@@ -27,7 +73,7 @@ export default function InventoryPage() {
         description="Manage your products to be sold"
         addButtonText="Add Product"
         tableTitle="Products"
-        rows={products}
+        rows={conformedProducts}
         loading={productsLoading}
         Table={ProductsTable}
         Form={ProductForm}
@@ -36,8 +82,8 @@ export default function InventoryPage() {
           getSearchParams: (p) => [p.name, p.sku, p.supplier],
           searchParams: ['name', 'SKU', 'supplier'],
         }}
-        onCreate={createProduct}
-        onUpdate={updateProduct}
+        onCreate={handleCreate}
+        onUpdate={handleUpdate}
         onDelete={deleteProduct}
       />
 

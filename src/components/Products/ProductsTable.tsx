@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { ProductDetails } from '.';
-import type { Product } from '../../lib/supabase/models';
+import type { ProductWithImages } from '../../lib/supabase/models';
 import { GridTable, type GridCol, Badge } from '../common';
 
 type Props = {
-  rows: Product[];
+  rows: ProductWithImages[];
   loading?: boolean;
-  onEdit: (product: Product) => void;
-  onDelete: (product: Product) => void;
+  onEdit: (product: ProductWithImages) => void;
+  onDelete: (product: ProductWithImages) => void;
 };
 
-const columns: GridCol<Product>[] = [
+const columns: GridCol<ProductWithImages>[] = [
   {
     header: 'Product',
     span: 2,
@@ -89,19 +89,19 @@ const columns: GridCol<Product>[] = [
 ];
 
 export function ProductsTable({ rows, loading, onEdit, onDelete }: Props) {
-  const [selected, setSelected] = useState<Product | null>(null);
+  const [selected, setSelected] = useState<ProductWithImages | null>(null);
 
   return (
     <>
-      <GridTable<Product>
+      <GridTable<ProductWithImages>
         columns={columns}
         rows={rows}
         loading={!!loading}
         keyFor={(product) => product.id}
         leading={(product) =>
-          product.image_url ? (
+          product.images?.length ? (
             <img
-              src={product.image_url}
+              src={product.images[0].url ?? ''}
               alt={product.name}
               className="w-16 h-16 rounded-xl object-cover"
             ></img>

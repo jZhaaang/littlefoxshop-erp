@@ -27,7 +27,7 @@ export function PurchaseItemsForm({
   }, [purchaseItems, onChange]);
 
   const updateRow = useCallback(
-    (i: Number, purchaseItem: PurchaseItemUpdate) => {
+    (i: number, purchaseItem: PurchaseItemUpdate) => {
       onChange(
         purchaseItems.map((row, idx) =>
           idx === i ? { ...row, ...purchaseItem } : row
@@ -38,7 +38,7 @@ export function PurchaseItemsForm({
   );
 
   const deleteRow = useCallback(
-    (i: Number) => {
+    (i: number) => {
       onChange(purchaseItems.filter((_, idx) => idx !== i));
     },
     [purchaseItems, onChange]

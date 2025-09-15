@@ -86,6 +86,38 @@ export type Database = {
         };
         Relationships: [];
       };
+      product_images: {
+        Row: {
+          created_at: string;
+          id: string;
+          path: string;
+          product_id: string | null;
+          url: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          path?: string;
+          product_id?: string | null;
+          url?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          path?: string;
+          product_id?: string | null;
+          url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'product_images_product_id_fkey';
+            columns: ['product_id'];
+            isOneToOne: false;
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       products: {
         Row: {
           cost_rmb: number;
@@ -93,7 +125,6 @@ export type Database = {
           description: string | null;
           details: string | null;
           id: string;
-          image_url: string | null;
           min_stock: number;
           name: string;
           price_usd: number | null;
@@ -108,7 +139,6 @@ export type Database = {
           description?: string | null;
           details?: string | null;
           id?: string;
-          image_url?: string | null;
           min_stock?: number;
           name?: string;
           price_usd?: number | null;
@@ -123,7 +153,6 @@ export type Database = {
           description?: string | null;
           details?: string | null;
           id?: string;
-          image_url?: string | null;
           min_stock?: number;
           name?: string;
           price_usd?: number | null;

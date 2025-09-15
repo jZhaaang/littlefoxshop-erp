@@ -42,8 +42,8 @@ type CrudSectionProps<T extends { id: string }> = {
   Form: React.ComponentType<FormProps<T>>;
   filters: FilterProps<T>;
 
-  onCreate: (values: any, file?: File | null) => Promise<void>;
-  onUpdate: (id: string, values: any, file?: File | null) => Promise<void>;
+  onCreate: (values: any) => Promise<void>;
+  onUpdate: (id: string, values: any) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 };
 
@@ -80,22 +80,22 @@ export function CrudSection<T extends { id: string }>({
   const currentEdit = rows.find((r) => r.id === openEditId) || null;
   const currentDelete = rows.find((r) => r.id === openDeleteId) || null;
 
-  async function handleAdd(values: any, file?: File | null) {
+  async function handleAdd(values: any) {
     if (!openAdd) return;
     try {
       setLoadingText(`Adding ${filters.getRowLabel(values)}`);
-      await onCreate(values, file);
+      await onCreate(values);
       setOpenAdd(false);
     } finally {
       setLoadingText(null);
     }
   }
 
-  async function handleEdit(values: any, file?: File | null) {
+  async function handleEdit(values: any) {
     if (!openEditId || !currentEdit) return;
     try {
       setLoadingText(`Editing ${filters.getRowLabel(currentEdit)}`);
-      await onUpdate(openEditId, values, file);
+      await onUpdate(openEditId, values);
       setOpenEditId(null);
     } finally {
       setLoadingText(null);

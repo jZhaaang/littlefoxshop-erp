@@ -17,7 +17,7 @@ export default function ExpensesPage() {
     deletePurchase,
     deletePurchaseItem,
   } = usePurchases();
-  const { products } = useProducts();
+  const { productsWithImages } = useProducts();
   const { supplies } = useSupplies();
 
   async function handleCreate(values: PurchaseWithItemsInsert) {
@@ -75,7 +75,10 @@ export default function ExpensesPage() {
         loading={loading}
         Table={PurchasesTable}
         Form={(props) => (
-          <PurchaseForm {...props} inventory={[...products, ...supplies]} />
+          <PurchaseForm
+            {...props}
+            inventory={[...productsWithImages, ...supplies]}
+          />
         )}
         filters={{
           getRowLabel: (p) => p.purchase_order_no,

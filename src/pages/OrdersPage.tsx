@@ -16,7 +16,7 @@ export default function ExpensesPage() {
     deleteOrder,
     deleteOrderItem,
   } = useOrders();
-  const { products } = useProducts();
+  const { productsWithImages } = useProducts();
 
   async function handleCreate(values: OrderWithItemsInsert) {
     const order = {
@@ -75,7 +75,9 @@ export default function ExpensesPage() {
         rows={ordersWithItems}
         loading={loading}
         Table={OrdersTable}
-        Form={(props) => <OrderForm {...props} products={[...products]} />}
+        Form={(props) => (
+          <OrderForm {...props} products={[...productsWithImages]} />
+        )}
         filters={{
           getRowLabel: (o) => o.order_no,
           getSearchParams: (o) => [o.order_no, o.customer_name],

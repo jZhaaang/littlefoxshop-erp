@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ImagePicker } from './ImagePicker';
 import {
   fromLocalInputToISO,
   toLocalInputValue,
@@ -7,13 +6,7 @@ import {
 
 export type Mode = 'create' | 'edit';
 
-export type FieldType =
-  | 'text'
-  | 'number'
-  | 'select'
-  | 'textarea'
-  | 'datetime'
-  | 'image';
+export type FieldType = 'text' | 'number' | 'select' | 'textarea' | 'datetime';
 
 export type FieldConfig<T> = {
   name: keyof T;
@@ -36,8 +29,7 @@ export type EntityFormProps<T> = {
   fields: FieldConfig<T>[];
   children?: React.ReactNode;
   onCancel: () => void;
-  onSubmit?: (values: T) => Promise<void> | void;
-  onSubmitWithFile?: (values: T, file: File | null) => Promise<void> | void;
+  onSubmit: (values: T) => Promise<void> | void;
   submitText?: string;
 };
 
@@ -48,12 +40,10 @@ export function EntityForm<T extends Record<string, any>>({
   children,
   onCancel,
   onSubmit,
-  onSubmitWithFile,
   submitText,
 }: EntityFormProps<T>) {
   const [values, setValues] = useState<T>(initial);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
-  const [file, setFile] = useState<File | null>(null);
 
   const submitLabel = submitText ?? (mode === 'edit' ? 'Save Changes' : 'Add');
 
@@ -74,13 +64,7 @@ export function EntityForm<T extends Record<string, any>>({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!runValidation()) return;
-
-    if (onSubmitWithFile) {
-      console.log('EntityForm.tsx File ', file);
-      await onSubmitWithFile(values, file);
-    } else if (onSubmit) {
-      await onSubmit(values);
-    }
+    await onSubmit(values);
   }
 
   return (
@@ -214,16 +198,6 @@ export function EntityForm<T extends Record<string, any>>({
                       )
                     }
                     step={60}
-                  />
-                )}
-
-                {field.type === 'image' && (
-                  <ImagePicker
-                    initialUrl={(val as string | null) ?? null}
-                    onChangeFile={(file) => {
-                      setFile(file);
-                      if (!file) setField(field.name, null as any);
-                    }}
                   />
                 )}
 
