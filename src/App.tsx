@@ -6,7 +6,7 @@ import InventoryPage from './pages/InventoryPage';
 import OrdersPage from './pages/OrdersPage';
 
 export default function App() {
-  const [page, setPage] = useState('overview');
+  const [page, setPage] = useState('inventory');
 
   return (
     <Layout page={page} setPage={setPage}>
