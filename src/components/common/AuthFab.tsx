@@ -13,7 +13,7 @@ export function AuthFab() {
         onClick={() => setOpen(true)}
         className="fixed bottom-4 right-4 rounded-full bg-black px-4 py-2 text-white shadow-lg hover:opacity-90"
       >
-        {user ? 'Account' : 'Login / Sign up'}
+        {user ? 'Account' : 'Login'}
       </button>
       {open && (
         <AuthModal
