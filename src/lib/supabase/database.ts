@@ -17,6 +17,7 @@ export type Database = {
       expenses: {
         Row: {
           cost_rmb: number;
+          cost_usd: number;
           created_at: string | null;
           description: string | null;
           id: string;
@@ -26,6 +27,7 @@ export type Database = {
         };
         Insert: {
           cost_rmb: number;
+          cost_usd: number;
           created_at?: string | null;
           description?: string | null;
           id?: string;
@@ -35,6 +37,7 @@ export type Database = {
         };
         Update: {
           cost_rmb?: number;
+          cost_usd?: number;
           created_at?: string | null;
           description?: string | null;
           id?: string;
