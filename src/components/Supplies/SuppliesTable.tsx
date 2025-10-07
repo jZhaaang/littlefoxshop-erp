@@ -32,9 +32,11 @@ const columns: GridCol<Supply>[] = [
     align: 'text-center',
     cell: (supply) => (
       <div className="text-slate-700">
-        <div className="font-medium">${supply.cost_rmb.toFixed(2)}</div>
+        <div className="font-medium">
+          ${(supply.cost_rmb * 0.14).toFixed(2)}
+        </div>
         <div className="text-xs text-slate-500">
-          ¥{(supply.cost_rmb * 0.14).toFixed(2)}
+          ¥{supply.cost_rmb.toFixed(2)}
         </div>
       </div>
     ),
