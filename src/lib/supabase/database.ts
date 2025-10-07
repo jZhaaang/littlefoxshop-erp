@@ -14,6 +14,36 @@ export type Database = {
   };
   public: {
     Tables: {
+      expenses: {
+        Row: {
+          cost_rmb: number;
+          created_at: string | null;
+          description: string | null;
+          id: string;
+          is_demo: boolean;
+          name: string;
+          team_id: string | null;
+        };
+        Insert: {
+          cost_rmb: number;
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          is_demo?: boolean;
+          name: string;
+          team_id?: string | null;
+        };
+        Update: {
+          cost_rmb?: number;
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          is_demo?: boolean;
+          name?: string;
+          team_id?: string | null;
+        };
+        Relationships: [];
+      };
       order_items: {
         Row: {
           id: string;
@@ -57,10 +87,12 @@ export type Database = {
           date_fulfilled: string | null;
           delivery_fee: number;
           id: string;
+          is_demo: boolean;
           notes: string | null;
           order_date: string;
           order_no: string;
           other_fees: number;
+          team_id: string;
         };
         Insert: {
           created_at?: string;
@@ -68,10 +100,12 @@ export type Database = {
           date_fulfilled?: string | null;
           delivery_fee?: number;
           id?: string;
+          is_demo?: boolean;
           notes?: string | null;
           order_date?: string;
           order_no: string;
           other_fees?: number;
+          team_id?: string;
         };
         Update: {
           created_at?: string;
@@ -79,10 +113,12 @@ export type Database = {
           date_fulfilled?: string | null;
           delivery_fee?: number;
           id?: string;
+          is_demo?: boolean;
           notes?: string | null;
           order_date?: string;
           order_no?: string;
           other_fees?: number;
+          team_id?: string;
         };
         Relationships: [];
       };
@@ -125,12 +161,14 @@ export type Database = {
           description: string | null;
           details: string | null;
           id: string;
+          is_demo: boolean;
           min_stock: number;
           name: string;
           price_usd: number | null;
           sku: string;
           stock: number;
           supplier: string | null;
+          team_id: string;
           type: Database['public']['Enums']['product_types'] | null;
         };
         Insert: {
@@ -139,12 +177,14 @@ export type Database = {
           description?: string | null;
           details?: string | null;
           id?: string;
+          is_demo?: boolean;
           min_stock?: number;
           name?: string;
           price_usd?: number | null;
           sku?: string;
           stock?: number;
           supplier?: string | null;
+          team_id?: string;
           type?: Database['public']['Enums']['product_types'] | null;
         };
         Update: {
@@ -153,12 +193,14 @@ export type Database = {
           description?: string | null;
           details?: string | null;
           id?: string;
+          is_demo?: boolean;
           min_stock?: number;
           name?: string;
           price_usd?: number | null;
           sku?: string;
           stock?: number;
           supplier?: string | null;
+          team_id?: string;
           type?: Database['public']['Enums']['product_types'] | null;
         };
         Relationships: [];
@@ -200,30 +242,36 @@ export type Database = {
           created_at: string | null;
           date_received: string | null;
           id: string;
+          is_demo: boolean;
           order_date: string;
           purchase_order_no: string;
           shipping_fee_domestic: number | null;
           shipping_fee_international: number | null;
+          team_id: string;
           total_cost: number;
         };
         Insert: {
           created_at?: string | null;
           date_received?: string | null;
           id?: string;
+          is_demo?: boolean;
           order_date?: string;
           purchase_order_no: string;
           shipping_fee_domestic?: number | null;
           shipping_fee_international?: number | null;
+          team_id?: string;
           total_cost?: number;
         };
         Update: {
           created_at?: string | null;
           date_received?: string | null;
           id?: string;
+          is_demo?: boolean;
           order_date?: string;
           purchase_order_no?: string;
           shipping_fee_domestic?: number | null;
           shipping_fee_international?: number | null;
+          team_id?: string;
           total_cost?: number;
         };
         Relationships: [];
@@ -234,33 +282,57 @@ export type Database = {
           created_at: string;
           details: string | null;
           id: string;
+          is_demo: boolean;
           min_stock: number;
           name: string;
           sku: string;
           stock: number;
           supplier: string;
+          team_id: string;
         };
         Insert: {
           cost_rmb: number;
           created_at?: string;
           details?: string | null;
           id?: string;
+          is_demo?: boolean;
           min_stock?: number;
           name?: string;
           sku?: string;
           stock?: number;
           supplier?: string;
+          team_id?: string;
         };
         Update: {
           cost_rmb?: number;
           created_at?: string;
           details?: string | null;
           id?: string;
+          is_demo?: boolean;
           min_stock?: number;
           name?: string;
           sku?: string;
           stock?: number;
           supplier?: string;
+          team_id?: string;
+        };
+        Relationships: [];
+      };
+      teams: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
         };
         Relationships: [];
       };

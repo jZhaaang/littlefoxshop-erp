@@ -8,6 +8,7 @@ export type ProductImage =
 export type Purchase = Database['public']['Tables']['purchases']['Row'];
 export type PurchaseItem =
   Database['public']['Tables']['purchase_items']['Row'];
+export type Expense = Database['public']['Tables']['expenses']['Row'];
 export type Supply = Database['public']['Tables']['supplies']['Row'];
 export type Order = Database['public']['Tables']['orders']['Row'];
 export type OrderItem = Database['public']['Tables']['order_items']['Row'];
@@ -20,6 +21,7 @@ export type PurchaseInsert =
   Database['public']['Tables']['purchases']['Insert'];
 export type PurchaseItemInsert =
   Database['public']['Tables']['purchase_items']['Insert'];
+export type ExpenseInsert = Database['public']['Tables']['expenses']['Insert'];
 export type SupplyInsert = Database['public']['Tables']['supplies']['Insert'];
 export type OrderInsert = Database['public']['Tables']['orders']['Insert'];
 export type OrderItemInsert =
@@ -33,6 +35,7 @@ export type PurchaseUpdate =
   Database['public']['Tables']['purchases']['Update'];
 export type PurchaseItemUpdate =
   Database['public']['Tables']['purchase_items']['Update'];
+export type ExpenseUpdate = Database['public']['Tables']['expenses']['Update'];
 export type SupplyUpdate = Database['public']['Tables']['supplies']['Update'];
 export type OrderUpdate = Database['public']['Tables']['orders']['Update'];
 export type OrderItemUpdate =

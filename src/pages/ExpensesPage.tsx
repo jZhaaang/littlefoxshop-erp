@@ -5,11 +5,13 @@ import type { PurchaseWithItemsInsert } from '../lib/supabase/models';
 import { diffPurchaseItems } from '../lib/utils/diffPurchaseItems';
 import { CrudSection } from '../components/common/';
 import { useSupplies } from '../lib/supabase/hooks/useSupplies';
+import { useExpenses } from '../lib/supabase/hooks/useExpenses';
+import { ExpenseForm, ExpensesTable } from '../components/Expenses';
 
 export default function ExpensesPage() {
   const {
     purchasesWithItems,
-    loading,
+    loading: purchasesLoading,
     createPurchase,
     createPurchaseItem,
     updatePurchase,
@@ -19,6 +21,14 @@ export default function ExpensesPage() {
   } = usePurchases();
   const { productsWithImages } = useProducts();
   const { supplies } = useSupplies();
+
+  const {
+    expenses,
+    loading: expensesLoading,
+    createExpense,
+    updateExpense,
+    deleteExpense,
+  } = useExpenses();
 
   async function handleCreate(values: PurchaseWithItemsInsert) {
     const purchase = {
@@ -67,12 +77,12 @@ export default function ExpensesPage() {
   return (
     <div className="space-y-6">
       <CrudSection
-        title="Expenses Overview"
+        title="Purchases Overview"
         description="Manage your product and supply expenses"
-        addButtonText="Add Expense"
-        tableTitle="Expenses"
+        addButtonText="Add Purchases"
+        tableTitle="Purchases"
         rows={purchasesWithItems}
-        loading={loading}
+        loading={purchasesLoading}
         Table={PurchasesTable}
         Form={(props) => (
           <PurchaseForm
@@ -88,6 +98,25 @@ export default function ExpensesPage() {
         onCreate={handleCreate}
         onUpdate={handleUpdate}
         onDelete={deletePurchase}
+      />
+
+      <CrudSection
+        title="Expenses Overview"
+        description="Manage your general costs and expenses"
+        addButtonText="Add Expense"
+        tableTitle="Expenses"
+        rows={expenses}
+        loading={expensesLoading}
+        Table={ExpensesTable}
+        Form={ExpenseForm}
+        filters={{
+          getRowLabel: (e) => e.name,
+          getSearchParams: (e) => [e.name, e.description],
+          searchParams: ['name', 'description'],
+        }}
+        onCreate={createExpense}
+        onUpdate={updateExpense}
+        onDelete={deleteExpense}
       />
     </div>
   );
