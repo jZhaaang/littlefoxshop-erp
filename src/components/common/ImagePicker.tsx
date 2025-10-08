@@ -1,4 +1,3 @@
-// components/common/ImagePicker.tsx
 import { useRef } from 'react';
 import type { ImagesDraft, LocalImage } from '../../lib/supabase/models';
 
@@ -66,7 +65,6 @@ export function ImagePicker({ value, onChange }: Props) {
         </div>
       </div>
 
-      {/* Existing images */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {value.existing.map((img) => {
           const markedForRemoval = value.removedIds.includes(img.id);
@@ -104,7 +102,6 @@ export function ImagePicker({ value, onChange }: Props) {
         })}
       </div>
 
-      {/* Newly added (not uploaded yet) */}
       {value.added.length > 0 && (
         <>
           <div className="text-sm font-medium">New (to upload)</div>
