@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
                   <th className="px-2 py-2">Revenue</th>
                   <th className="px-2 py-2">COGS</th>
                   <th className="px-2 py-2">Gross Profit</th>
-                  <th className="px-2 py-2">Opex</th>
+                  <th className="px-2 py-2">Expenses</th>
                   <th className="px-2 py-2">Net Profit</th>
                   <th className="px-2 py-2">Purchase Spend</th>
                   <th className="px-2 py-2">Delivery Fees</th>
