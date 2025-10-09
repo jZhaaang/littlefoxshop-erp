@@ -12,6 +12,8 @@ export type Expense = Database['public']['Tables']['expenses']['Row'];
 export type Supply = Database['public']['Tables']['supplies']['Row'];
 export type Order = Database['public']['Tables']['orders']['Row'];
 export type OrderItem = Database['public']['Tables']['order_items']['Row'];
+export type Note = Database['public']['Tables']['notes']['Row'];
+export type NoteImage = Database['public']['Tables']['note_images']['Row'];
 
 // Insert types
 export type ProductInsert = Database['public']['Tables']['products']['Insert'];
@@ -26,6 +28,9 @@ export type SupplyInsert = Database['public']['Tables']['supplies']['Insert'];
 export type OrderInsert = Database['public']['Tables']['orders']['Insert'];
 export type OrderItemInsert =
   Database['public']['Tables']['order_items']['Insert'];
+export type NoteInsert = Database['public']['Tables']['notes']['Insert'];
+export type NoteImageInsert =
+  Database['public']['Tables']['note_images']['Insert'];
 
 // Update types
 export type ProductUpdate = Database['public']['Tables']['products']['Update'];
@@ -40,11 +45,14 @@ export type SupplyUpdate = Database['public']['Tables']['supplies']['Update'];
 export type OrderUpdate = Database['public']['Tables']['orders']['Update'];
 export type OrderItemUpdate =
   Database['public']['Tables']['order_items']['Update'];
+export type NoteUpdate = Database['public']['Tables']['notes']['Update'];
+export type NoteImageUpdate =
+  Database['public']['Tables']['note_images']['Update'];
 
 // UI/UX types
 export type LocalImage = { id: string; file: File; previewUrl: string };
 export type ImagesDraft = {
-  existing: ProductImage[];
+  existing: ProductImage[] | NoteImage[];
   added: LocalImage[];
   removedIds: string[];
 };
@@ -53,6 +61,13 @@ export type ProductWithImages = Product & {
   images?: ProductImage[];
 };
 export type ProductWithImagesInsert = ProductInsert & {
+  imagesDraft?: ImagesDraft;
+};
+
+export type NoteWithImages = Note & {
+  images?: NoteImage[];
+};
+export type NoteWithImagesInsert = NoteInsert & {
   imagesDraft?: ImagesDraft;
 };
 

@@ -33,6 +33,11 @@ const TABS = [
     label: 'Analytics',
     icon: <span className="text-slate-500">📈</span>,
   },
+  {
+    key: 'notes',
+    label: 'Notes',
+    icon: <span className="text-slate-500">📝</span>,
+  },
 ];
 
 export function Layout({ page, setPage, children }: LayoutProps) {

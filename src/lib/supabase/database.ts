@@ -47,6 +47,71 @@ export type Database = {
         };
         Relationships: [];
       };
+      note_images: {
+        Row: {
+          created_at: string;
+          id: string;
+          note_id: string | null;
+          path: string;
+          url: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          note_id?: string | null;
+          path?: string;
+          url?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          note_id?: string | null;
+          path?: string;
+          url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'note_images_note_id_fkey';
+            columns: ['note_id'];
+            isOneToOne: false;
+            referencedRelation: 'notes';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      notes: {
+        Row: {
+          content_json: Json;
+          content_text: string | null;
+          created_at: string;
+          id: string;
+          is_demo: boolean;
+          team_id: string;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          content_json?: Json;
+          content_text?: string | null;
+          created_at?: string;
+          id?: string;
+          is_demo?: boolean;
+          team_id?: string;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          content_json?: Json;
+          content_text?: string | null;
+          created_at?: string;
+          id?: string;
+          is_demo?: boolean;
+          team_id?: string;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       order_items: {
         Row: {
           id: string;

@@ -1,6 +1,5 @@
 export * from './Badge';
 export * from './Card';
-export * from './ConfirmDialog';
 export * from './Layout';
 export * from './Modal';
 export * from './PageHeader';
@@ -11,3 +10,6 @@ export * from './LoadingModal';
 export * from './EntityForm';
 export * from './CrudSection';
 export * from './ImagePicker';
+export * from './Spinner';
+export * from './RichTextEditor';
+export * from './Dialog';

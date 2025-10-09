@@ -3,10 +3,17 @@ import {
   fromLocalInputToISO,
   toLocalInputValue,
 } from '../../lib/utils/datetime';
+import { RichTextEditor } from './RichTextEditor';
 
 export type Mode = 'create' | 'edit';
 
-export type FieldType = 'text' | 'number' | 'select' | 'textarea' | 'datetime';
+export type FieldType =
+  | 'text'
+  | 'number'
+  | 'select'
+  | 'textarea'
+  | 'datetime'
+  | 'richtext';
 
 export type FieldConfig<T> = {
   name: keyof T;
@@ -198,6 +205,20 @@ export function EntityForm<T extends Record<string, any>>({
                       )
                     }
                     step={60}
+                  />
+                )}
+
+                {field.type === 'richtext' && (
+                  <RichTextEditor
+                    value={val as any}
+                    onChange={(json) => setField(field.name, json as any)}
+                    toolbar={{
+                      image: false,
+                      list: false,
+                      bold: true,
+                      italic: true,
+                    }}
+                    className="rounded-xl border bg-white"
                   />
                 )}
 
