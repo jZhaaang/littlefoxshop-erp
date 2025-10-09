@@ -34,14 +34,14 @@ const columns: GridCol<PurchaseWithItems>[] = [
   },
   {
     header: 'Order Date',
-    span: 2,
+    span: 1,
     cell: (row) => (
       <span className="text-slate-700">{fmtDate(row.order_date)}</span>
     ),
   },
   {
     header: 'Received',
-    span: 2,
+    span: 1,
     cell: (row) => (
       <span className="text-slate-700">
         {fmtDate(row.date_received) || '-'}
@@ -53,6 +53,33 @@ const columns: GridCol<PurchaseWithItems>[] = [
     span: 1,
     cell: (row) => (
       <span className="text-slate-600">{row.purchaseItems.length}</span>
+    ),
+  },
+  {
+    header: 'Cost of Items',
+    span: 1,
+    cell: (row) => (
+      <span className="text-slate-600 font-medium">¥{row.items_cost_rmb}</span>
+    ),
+  },
+  {
+    header: 'Cost of Shipping',
+    span: 1,
+    cell: (row) => (
+      <span className="text-slate-600 font-medium">
+        ¥
+        {(
+          (row.shipping_fee_domestic ?? 0) +
+          (row.shipping_fee_international ?? 0)
+        ).toFixed(2)}
+      </span>
+    ),
+  },
+  {
+    header: 'Total Cost',
+    span: 1,
+    cell: (row) => (
+      <span className="text-slate-600 font-medium">¥{row.total_cost}</span>
     ),
   },
 ];

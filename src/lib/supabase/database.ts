@@ -332,36 +332,42 @@ export type Database = {
           date_received: string | null;
           id: string;
           is_demo: boolean;
+          items_cost_rmb: number;
           order_date: string;
           purchase_order_no: string;
           shipping_fee_domestic: number | null;
           shipping_fee_international: number | null;
           team_id: string;
           total_cost: number;
+          total_cost_usd: number;
         };
         Insert: {
           created_at?: string | null;
           date_received?: string | null;
           id?: string;
           is_demo?: boolean;
+          items_cost_rmb?: number;
           order_date?: string;
           purchase_order_no: string;
           shipping_fee_domestic?: number | null;
           shipping_fee_international?: number | null;
           team_id?: string;
           total_cost?: number;
+          total_cost_usd?: number;
         };
         Update: {
           created_at?: string | null;
           date_received?: string | null;
           id?: string;
           is_demo?: boolean;
+          items_cost_rmb?: number;
           order_date?: string;
           purchase_order_no?: string;
           shipping_fee_domestic?: number | null;
           shipping_fee_international?: number | null;
           team_id?: string;
           total_cost?: number;
+          total_cost_usd?: number;
         };
         Relationships: [];
       };
@@ -514,6 +520,12 @@ export type Database = {
         };
         Relationships: [];
       };
+      v_months_dynamic: {
+        Row: {
+          month: string | null;
+        };
+        Relationships: [];
+      };
       v_order_financials: {
         Row: {
           cogs_usd: number | null;
@@ -559,6 +571,10 @@ export type Database = {
       };
     };
     Functions: {
+      recalc_purchase_totals: {
+        Args: { p_id: string };
+        Returns: undefined;
+      };
       sku_kind: {
         Args: { p_sku: string };
         Returns: string;
