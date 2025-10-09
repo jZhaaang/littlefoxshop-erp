@@ -140,11 +140,32 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'order_items_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_order_financials';
+            referencedColumns: ['order_id'];
+          },
+          {
+            foreignKeyName: 'order_items_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_order_items_priced';
+            referencedColumns: ['order_id'];
+          },
+          {
             foreignKeyName: 'order_items_product_sku_fkey';
             columns: ['product_sku'];
             isOneToOne: false;
             referencedRelation: 'products';
             referencedColumns: ['sku'];
+          },
+          {
+            foreignKeyName: 'order_items_product_sku_fkey';
+            columns: ['product_sku'];
+            isOneToOne: false;
+            referencedRelation: 'v_inventory_on_hand';
+            referencedColumns: ['product_sku'];
           },
         ];
       };
@@ -406,7 +427,136 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      v_inventory_on_hand: {
+        Row: {
+          inventory_valuation_usd: number | null;
+          product_sku: string | null;
+          qty_on_hand: number | null;
+          unit_cost_usd: number | null;
+        };
+        Insert: {
+          inventory_valuation_usd?: never;
+          product_sku?: string | null;
+          qty_on_hand?: number | null;
+          unit_cost_usd?: never;
+        };
+        Update: {
+          inventory_valuation_usd?: never;
+          product_sku?: string | null;
+          qty_on_hand?: number | null;
+          unit_cost_usd?: never;
+        };
+        Relationships: [];
+      };
+      v_lifetime_kpis: {
+        Row: {
+          cogs_usd: number | null;
+          delivery_fee_usd: number | null;
+          gross_profit_usd: number | null;
+          net_profit_after_opex_usd: number | null;
+          operating_expenses_usd: number | null;
+          other_fees_usd: number | null;
+          purchase_spend_usd: number | null;
+          revenue_usd: number | null;
+        };
+        Relationships: [];
+      };
+      v_monthly_kpis: {
+        Row: {
+          cogs_usd: number | null;
+          delivery_fee_usd: number | null;
+          gross_profit_usd: number | null;
+          month: string | null;
+          net_profit_after_opex_usd: number | null;
+          net_profit_before_opex_usd: number | null;
+          operating_expenses_usd: number | null;
+          order_count: number | null;
+          other_fees_usd: number | null;
+          products_sold: number | null;
+          purchase_spend_usd: number | null;
+          revenue_usd: number | null;
+        };
+        Relationships: [];
+      };
+      v_monthly_operating_expenses: {
+        Row: {
+          expenses_usd: number | null;
+          month: string | null;
+        };
+        Relationships: [];
+      };
+      v_monthly_orders_rollup: {
+        Row: {
+          cogs_usd: number | null;
+          delivery_fee_usd: number | null;
+          gross_profit_usd: number | null;
+          month: string | null;
+          net_profit_before_opex_usd: number | null;
+          order_count: number | null;
+          other_fees_usd: number | null;
+          products_sold: number | null;
+          revenue_usd: number | null;
+        };
+        Relationships: [];
+      };
+      v_monthly_purchase_spend: {
+        Row: {
+          month: string | null;
+          purchase_spend_usd: number | null;
+        };
+        Relationships: [];
+      };
+      v_monthly_purchases_quantities: {
+        Row: {
+          month: string | null;
+          qty_received: number | null;
+          sku: string | null;
+        };
+        Relationships: [];
+      };
+      v_order_financials: {
+        Row: {
+          cogs_usd: number | null;
+          delivery_fee_usd: number | null;
+          gross_profit_usd: number | null;
+          items_sold: number | null;
+          net_profit_before_opex_usd: number | null;
+          order_date: string | null;
+          order_id: string | null;
+          other_fees_usd: number | null;
+          revenue_usd: number | null;
+        };
+        Relationships: [];
+      };
+      v_order_items_priced: {
+        Row: {
+          cost_rmb: number | null;
+          line_cogs_usd: number | null;
+          line_gross_profit_usd: number | null;
+          line_revenue_usd: number | null;
+          order_date: string | null;
+          order_id: string | null;
+          price_usd: number | null;
+          product_sku: string | null;
+          quantity: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'order_items_product_sku_fkey';
+            columns: ['product_sku'];
+            isOneToOne: false;
+            referencedRelation: 'products';
+            referencedColumns: ['sku'];
+          },
+          {
+            foreignKeyName: 'order_items_product_sku_fkey';
+            columns: ['product_sku'];
+            isOneToOne: false;
+            referencedRelation: 'v_inventory_on_hand';
+            referencedColumns: ['product_sku'];
+          },
+        ];
+      };
     };
     Functions: {
       sku_kind: {

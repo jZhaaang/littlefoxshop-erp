@@ -14,3 +14,12 @@ export const fromLocalInputToISO = (s: string): string | null => {
   const local = new Date(y, (m ?? 1) - 1, d ?? 1, h ?? 0, min ?? 0);
   return Number.isNaN(local.getTime()) ? null : local.toISOString();
 };
+
+export const fmtMonth = (iso: string) => {
+  const d = new Date(`${iso}T12:00:00Z`);
+  return d.toLocaleDateString(undefined, {
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+};

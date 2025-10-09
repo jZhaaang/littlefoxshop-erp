@@ -7,6 +7,7 @@ import OrdersPage from './pages/OrdersPage';
 import { AuthFab } from './components/common/AuthFab';
 import { supabase } from './lib/supabase/client';
 import NotesPage from './pages/NotesPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 
 function useReloadOnAuthBoundaryChange() {
   const hadSessionRef = useRef<boolean | null>(null);
@@ -55,9 +56,7 @@ export default function App() {
         {page === 'inventory' && <InventoryPage />}
         {page === 'orders' && <OrdersPage />}
         {page === 'expenses' && <ExpensesPage />}
-        {page === 'analytics' && (
-          <div className="text-slate-500">Analytics (coming soon)</div>
-        )}
+        {page === 'analytics' && <AnalyticsPage />}
         {page === 'notes' && <NotesPage />}
       </Layout>
     </>

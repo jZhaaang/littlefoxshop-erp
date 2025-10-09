@@ -15,6 +15,9 @@ export type OrderItem = Database['public']['Tables']['order_items']['Row'];
 export type Note = Database['public']['Tables']['notes']['Row'];
 export type NoteImage = Database['public']['Tables']['note_images']['Row'];
 
+export type MonthlyKPI = Database['public']['Views']['v_monthly_kpis']['Row'];
+export type LifetimeKPI = Database['public']['Views']['v_lifetime_kpis']['Row'];
+
 // Insert types
 export type ProductInsert = Database['public']['Tables']['products']['Insert'];
 export type ProductImageInsert =
