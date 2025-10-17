@@ -12,6 +12,7 @@ export default function InventoryPage() {
   const {
     productsWithImages,
     loading: productsLoading,
+    refetch: productsRefetch,
     createProduct,
     updateProduct,
     deleteProduct,
@@ -49,7 +50,9 @@ export default function InventoryPage() {
     };
 
     await createProduct(product, values.imagesDraft!);
+    productsRefetch();
   }
+
   async function handleUpdate(id: string, values: ProductWithImagesInsert) {
     const product = {
       sku: values.sku,
@@ -64,6 +67,12 @@ export default function InventoryPage() {
     };
 
     await updateProduct(id, product, values.imagesDraft!);
+    productsRefetch();
+  }
+
+  async function handleDelete(id: string) {
+    await deleteProduct(id);
+    productsRefetch();
   }
 
   return (
@@ -84,7 +93,7 @@ export default function InventoryPage() {
         }}
         onCreate={handleCreate}
         onUpdate={handleUpdate}
-        onDelete={deleteProduct}
+        onDelete={handleDelete}
       />
 
       <CrudSection
