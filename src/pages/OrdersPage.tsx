@@ -9,6 +9,7 @@ export default function ExpensesPage() {
   const {
     ordersWithItems,
     loading,
+    refetch,
     createOrder,
     createOrderItem,
     updateOrder,
@@ -31,7 +32,9 @@ export default function ExpensesPage() {
     };
 
     await createOrder(order, values.orderItems);
+    refetch();
   }
+
   async function handleUpdate(id: string, values: OrderWithItemsInsert) {
     const order = {
       id: values.id,
@@ -63,6 +66,12 @@ export default function ExpensesPage() {
     await Promise.all(
       itemsToCreate.map((orderItem) => createOrderItem(id, orderItem))
     );
+    refetch();
+  }
+
+  async function handleDelete(id: string) {
+    await deleteOrder(id);
+    refetch();
   }
 
   return (
@@ -85,7 +94,7 @@ export default function ExpensesPage() {
         }}
         onCreate={handleCreate}
         onUpdate={handleUpdate}
-        onDelete={deleteOrder}
+        onDelete={handleDelete}
       />
     </div>
   );

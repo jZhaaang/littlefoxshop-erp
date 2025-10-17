@@ -4,8 +4,14 @@ import { useNotes } from '../lib/supabase/hooks/useNotes';
 import type { ImagesDraft, NoteWithImagesInsert } from '../lib/supabase/models';
 
 export default function NotesPage() {
-  const { notesWithImages, loading, createNote, updateNote, deleteNote } =
-    useNotes();
+  const {
+    notesWithImages,
+    loading,
+    refetch,
+    createNote,
+    updateNote,
+    deleteNote,
+  } = useNotes();
 
   const conformedNotes = notesWithImages.map((noteWithImages) => {
     return {
@@ -25,13 +31,21 @@ export default function NotesPage() {
     };
 
     await createNote(note, values.imagesDraft!);
+    refetch();
   }
+
   async function handleUpdate(id: string, values: NoteWithImagesInsert) {
     const note = {
       title: values.title,
       content_json: values.content_json,
     };
     await updateNote(id, note, values.imagesDraft!);
+    refetch();
+  }
+
+  async function handleDelete(id: string) {
+    await deleteNote(id);
+    refetch();
   }
 
   return (
@@ -52,7 +66,7 @@ export default function NotesPage() {
         }}
         onCreate={handleCreate}
         onUpdate={handleUpdate}
-        onDelete={deleteNote}
+        onDelete={handleDelete}
       />
     </div>
   );

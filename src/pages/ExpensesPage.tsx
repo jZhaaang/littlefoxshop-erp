@@ -1,7 +1,11 @@
 import { PurchasesTable, PurchaseForm } from '../components/Purchases';
 import { usePurchases } from '../lib/supabase/hooks/usePurchases';
 import { useProducts } from '../lib/supabase/hooks/useProducts';
-import type { PurchaseWithItemsInsert } from '../lib/supabase/models';
+import type {
+  Expense,
+  ExpenseUpdate,
+  PurchaseWithItemsInsert,
+} from '../lib/supabase/models';
 import { diffPurchaseItems } from '../lib/utils/diffPurchaseItems';
 import { CrudSection } from '../components/common/';
 import { useSupplies } from '../lib/supabase/hooks/useSupplies';
@@ -12,6 +16,7 @@ export default function ExpensesPage() {
   const {
     purchasesWithItems,
     loading: purchasesLoading,
+    refetch: purchasesRefetch,
     createPurchase,
     createPurchaseItem,
     updatePurchase,
@@ -25,12 +30,13 @@ export default function ExpensesPage() {
   const {
     expenses,
     loading: expensesLoading,
+    refetch: expensesRefetch,
     createExpense,
     updateExpense,
     deleteExpense,
   } = useExpenses();
 
-  async function handleCreate(values: PurchaseWithItemsInsert) {
+  async function handlePurchaseCreate(values: PurchaseWithItemsInsert) {
     const purchase = {
       purchase_order_no: values.purchase_order_no,
       order_date: values.order_date,
@@ -40,8 +46,13 @@ export default function ExpensesPage() {
     };
 
     await createPurchase(purchase, values.purchaseItems);
+    purchasesRefetch();
   }
-  async function handleUpdate(id: string, values: PurchaseWithItemsInsert) {
+
+  async function handlePurchaseUpdate(
+    id: string,
+    values: PurchaseWithItemsInsert
+  ) {
     const purchase = {
       id: values.id,
       purchase_order_no: values.purchase_order_no,
@@ -72,6 +83,27 @@ export default function ExpensesPage() {
     await Promise.all(
       itemsToCreate.map((purchaseItem) => createPurchaseItem(id, purchaseItem))
     );
+    purchasesRefetch();
+  }
+
+  async function handlePurchaseDelete(id: string) {
+    await deletePurchase(id);
+    purchasesRefetch();
+  }
+
+  async function handleExpenseCreate(expense: Expense) {
+    await createExpense(expense);
+    expensesRefetch();
+  }
+
+  async function handleExpenseUpdate(id: string, expense: ExpenseUpdate) {
+    await updateExpense(id, expense);
+    expensesRefetch();
+  }
+
+  async function handleExpenseDelete(id: string) {
+    await deleteExpense(id);
+    expensesRefetch();
   }
 
   return (
@@ -95,9 +127,9 @@ export default function ExpensesPage() {
           getSearchParams: (p) => [p.purchase_order_no],
           searchParams: ['purchase order #'],
         }}
-        onCreate={handleCreate}
-        onUpdate={handleUpdate}
-        onDelete={deletePurchase}
+        onCreate={handlePurchaseCreate}
+        onUpdate={handlePurchaseUpdate}
+        onDelete={handlePurchaseDelete}
       />
 
       <CrudSection
@@ -114,9 +146,9 @@ export default function ExpensesPage() {
           getSearchParams: (e) => [e.name, e.description],
           searchParams: ['name', 'description'],
         }}
-        onCreate={createExpense}
-        onUpdate={updateExpense}
-        onDelete={deleteExpense}
+        onCreate={handleExpenseCreate}
+        onUpdate={handleExpenseUpdate}
+        onDelete={handleExpenseDelete}
       />
     </div>
   );
