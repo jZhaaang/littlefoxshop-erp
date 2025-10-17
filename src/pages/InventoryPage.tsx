@@ -79,8 +79,8 @@ export default function InventoryPage() {
         Form={ProductForm}
         filters={{
           getRowLabel: (p) => p.name,
-          getSearchParams: (p) => [p.name, p.sku, p.supplier],
-          searchParams: ['name', 'SKU', 'supplier'],
+          getSearchParams: (p) => [p.name, p.sku, p.supplier, p.type],
+          searchParams: ['name', 'SKU', 'supplier', 'type'],
         }}
         onCreate={handleCreate}
         onUpdate={handleUpdate}
