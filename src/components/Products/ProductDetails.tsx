@@ -151,6 +151,19 @@ export function ProductDetails({ product, onClose }: Props) {
               </span>
             }
           />
+          <Info label="Material" value={product!.material ?? 'N/A'} />
+          <Info label="Size" value={product!.size ?? 'N/A'} />
+          <Info label="Weight" value={product!.weight ?? 'N/A'} />
+          <Info
+            label="Cleaning Method"
+            value={product!.cleaning_method ?? 'N/A'}
+          />
+          <Info
+            label="Sustainability"
+            value={product!.sustainability ?? 'N/A'}
+          />
+          <Info label="Tags" value={product!.tags ?? 'N/A'} />
+          <Info label="Occasion" value={product!.occasion ?? 'N/A'} />
           <div className="col-span-2">
             <Info label="Description" value={product!.description ?? '—'} />
           </div>
